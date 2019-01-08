@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="589e2885-9ca7-4377-ae67-b537b273af8e" name="Default" comment="" />
+    <list default="true" id="589e2885-9ca7-4377-ae67-b537b273af8e" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/src/welcome/welcome.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/welcome/welcome.html" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -27,8 +29,8 @@
       <file leaf-file-name="client.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/client.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+            <state>
+              <caret selection-end-line="8" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -52,12 +54,16 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="welcome.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="welcome.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/welcome/welcome.html">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="14" column="63" lean-forward="true" selection-start-line="14" selection-start-column="63" selection-end-line="14" selection-end-column="63" />
+            </state>
+          </provider>
         </entry>
       </file>
-      <file leaf-file-name="welcome.css" pinned="false" current-in-tab="true">
+      <file leaf-file-name="welcome.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/welcome/welcome.css">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
@@ -72,6 +78,7 @@
       <list>
         <option value="$PROJECT_DIR$/src/client.html" />
         <option value="$PROJECT_DIR$/src/client.js" />
+        <option value="$PROJECT_DIR$/src/welcome/welcome.html" />
       </list>
     </option>
   </component>
@@ -150,12 +157,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1546951160453</updated>
-      <workItem from="1546951161696" duration="1335000" />
+      <workItem from="1546951161696" duration="5101000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1335000" />
+    <option name="totallyTimeSpent" value="5101000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -198,13 +205,6 @@
     <entry file="file://$PROJECT_DIR$/src/client.css">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/client.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/client.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -215,11 +215,22 @@
     <entry file="file://$PROJECT_DIR$/src/serverstub.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/welcome/welcome.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/welcome/welcome.css">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/client.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="8" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/welcome/welcome.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="63" lean-forward="true" selection-start-line="14" selection-start-column="63" selection-end-line="14" selection-end-column="63" />
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
