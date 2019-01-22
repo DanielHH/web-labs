@@ -6,65 +6,72 @@
         <title>Welcome page</title>
     </head>
     <body>
-        <img src="../../wimage.png"/>
+      <div id="container">
 
-        <form action="login" method="post"> <!--TODO: login-->
+        <img id="wimage" src="../../wimage.png"/>
+
+
+        <form class="center" id="login_form" action="login" method="post"> <!--TODO: login-->
             <fieldset>
-                <p>
+                <legend>Log in</legend>
+                <div>
                     <label for="email_login">Email</label>
-                    <input name="email_login" id="email_login">
-                </p>
-                <p>
+                    <input type="text" name="email_login" id="email_login" size="17">
+                </div>
+                <div>
                     <label for="password_login">Password</label>
-                    <input name="password" id="password_login">
-                </p>
+                    <input type="password" name="password" id="password_login" size="17">
+                </div>
 
                 <button name="login">Login</button>
             </fieldset>
         </form>
 
-        <form action="register" method="post"> <!--TODO: register-->
-            <fieldset>
-                <h1>Sign up here</h1>
-                <p>
-                    <label for="first_name">First name</label>
-                    <input name="first_name" id="first_name">
-                </p>
-                <p>
-                    <label for="family_name">Family name</label>
-                    <input name="family_name" id="family_name">
-                </p>
-                <p>
-                    <label for="gender">Gender</label>
-                    <select name="gender" id="gender">
-                        <option>Male</option>
-                        <option>Female</option>
-                        <option>Other</option>
-                    </select>
-                </p>
-                <p>
-                    <label for="city">City</label>
-                    <input name="city" id="city">
-                </p>
-                <p>
-                    <label for="country">Country</label>
-                    <input name="country" id="country">
-                </p>
-                <p>
-                    <label for="email">Email</label>
-                    <input name="email" id="email">
-                </p>
-                <p>
-                    <label for="password">Password</label>
-                    <input name="password" id="password">
-                </p>
-                <p>
-                    <label for="repeat_password">Repeat password</label>
-                    <input name="repeat_password" id="repeat_password">
-                </p>
 
-                <button name="signup">Sign up</button>
-            </fieldset>
+        <form class="center" id="signup_form" action="register" method="post"> <!--TODO: register-->
+          <fieldset>
+            <h3 style="text-align: center">Sign up here</h3>
+              <div>
+                <label for="first_name">First name</label>
+                <input name="first_name" id="first_name" size="17">
+              </div>
+              <div>
+                <label for="family_name">Family name</label>
+                <input name="family_name" id="family_name" size="17">
+              </div>
+              <div>
+                <label for="gender">Gender</label>
+                <select name="gender" id="gender">
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="city">City</label>
+                <input name="city" id="city" size="17">
+              </div>
+              <div>
+                <label for="country">Country</label>
+                <input name="country" id="country" size="17">
+              </div>
+              <div>
+                <label for="email">Email</label>
+                <input name="email" id="email" size="17">
+              </div>
+              <div>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" size="17">
+              </div>
+              <div>
+                <label for="repeat_password">Repeat PSW</label>
+                <input type="password" name="repeat_password" id="repeat_password" size="17">
+              </div>
+
+              <button name="signup">Sign up</button>
+          </fieldset>
         </form>
+
+      </div>
     </body>
 </html>
