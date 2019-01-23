@@ -28,10 +28,11 @@ button {
 fieldset {
   padding: 0;
   background-color: #FFFFFF;
+  height: 100%;
 }
 
 fieldset > div {
-  margin-bottom: 3.3px;
+  margin-bottom: 4px;
 }
 
 
