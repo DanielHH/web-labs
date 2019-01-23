@@ -1,7 +1,7 @@
 <html>
     <head>
         <link href="welcome.css" type="text/css" rel="stylesheet">
-        <script src="../client.js" type="text/javascript"></script>
+        <script src="welcome.js" type="text/javascript"></script>
         <script src="../serverstub.js" type="text/javascript"></script>
         <title>Welcome page</title>
     </head>
@@ -10,8 +10,7 @@
 
         <img class="center" id="wimage" src="../../wimage.png"/>
 
-
-        <form id="login_form" action="login" method="post"> <!--TODO: login-->
+        <form id="login_form" method="post"> <!--TODO: login-->
             <fieldset>
                 <div>
                     <label for="email_login">Email</label>
@@ -25,8 +24,7 @@
             </fieldset>
         </form>
 
-
-        <form id="signup_form" action="register" onsubmit="return validateForm()" method="post"> <!--TODO: register-->
+        <form name="signup_form" id="signup_form" onsubmit="return validateForm()" method="post"> <!--TODO: register-->
           <fieldset>
             <h3 style="text-align: center">Sign up here</h3>
               <div>
