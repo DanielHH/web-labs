@@ -24,7 +24,7 @@
             </fieldset>
         </form>
 
-        <form name="signup_form" id="signup_form" onsubmit="return validateForm()" method="post"> <!--TODO: register-->
+        <form name="signup_form" id="signup_form" method="post"> <!--TODO: register-->
           <fieldset>
             <h3 style="text-align: center">Sign up here</h3>
               <div>
@@ -45,7 +45,7 @@
               </div>
               <div>
                 <label for="city">City</label>
-                <input name="city" id="city" size="17" required>
+                <input name="city" id="city" size="17">
               </div>
               <div>
                 <label for="country">Country</label>
@@ -57,11 +57,11 @@
               </div>
               <div>
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" size="17" required>
+                <input type="password" name="password" id="password" size="17" oninput="return validatePassword();" required>
               </div>
               <div>
                 <label for="repeat_password">Repeat PSW</label>
-                <input type="password" name="repeat_password" id="repeat_password" size="17" required>
+                <input type="password" name="repeat_password" id="repeat_password" size="17" oninput="return validatePassword();" required>
               </div>
 
               <button name="signup">Sign up</button>
