@@ -8,12 +8,11 @@
     <body>
       <div id="container">
 
-        <img id="wimage" src="../../wimage.png"/>
+        <img class="center" id="wimage" src="../../wimage.png"/>
 
 
-        <form class="center" id="login_form" action="login" method="post"> <!--TODO: login-->
+        <form id="login_form" action="login" method="post"> <!--TODO: login-->
             <fieldset>
-                <legend>Log in</legend>
                 <div>
                     <label for="email_login">Email</label>
                     <input type="text" name="email_login" id="email_login" size="17">
@@ -22,13 +21,12 @@
                     <label for="password_login">Password</label>
                     <input type="password" name="password" id="password_login" size="17">
                 </div>
-
                 <button name="login">Login</button>
             </fieldset>
         </form>
 
 
-        <form class="center" id="signup_form" action="register" method="post"> <!--TODO: register-->
+        <form id="signup_form" action="register" method="post"> <!--TODO: register-->
           <fieldset>
             <h3 style="text-align: center">Sign up here</h3>
               <div>

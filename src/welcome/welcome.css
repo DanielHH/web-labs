@@ -1,17 +1,24 @@
 #container {
   display: grid;
   grid-template-columns: 340px 250px;
-  grid-template-rows: 130px 260px;
+  grid-template-rows: 100px 290px;
   grid-gap: 10px;
   top: 100px;
   margin: auto;
-  width: 600
+  width: 600px;
+  position: relative;
 }
 
 .center {
   align-self: center;
   justify-content: center;
 }
+
+
+body {
+  background-color: #0000FF;
+}
+
 
 button {
   float: right;
@@ -20,10 +27,11 @@ button {
 
 fieldset {
   padding: 0;
+  background-color: #FFFFFF;
 }
 
 fieldset > div {
-  margin-bottom: 5px;
+  margin-bottom: 3.3px;
 }
 
 
@@ -49,8 +57,11 @@ input {
 #login_form {
   grid-column: 2;
   grid-row: 1;
-
 }
+
+#login_form > fieldset {
+    padding-top: 15px;
+  }
 
 #signup_form {
   grid-column: 2;
