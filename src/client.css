@@ -1,0 +1,69 @@
+#container {
+  display: grid;
+  grid-template-columns: 340px 250px;
+  grid-template-rows: 100px 290px;
+  grid-gap: 10px;
+  top: 100px;
+  margin: auto;
+  width: 600px;
+  position: relative;
+}
+
+.center {
+  align-self: center;
+  justify-content: center;
+}
+
+
+body {
+  background-color: #0000FF;
+}
+
+
+button {
+  float: right;
+  margin: 3px;
+}
+
+fieldset {
+  padding: 0;
+  background-color: #FFFFFF;
+  height: 100%;
+}
+
+fieldset > div {
+  margin-bottom: 4px;
+}
+
+label {
+  display: inline-block;
+  text-align: left;
+  width: 85px;
+}​
+
+input {
+    width: 20px;
+}
+
+#container > form > fieldset > p {
+  font-size: 12px;
+}
+
+#wimage {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+#login_form {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+#login_form > fieldset {
+    padding-top: 15px;
+  }
+
+#signup_form {
+  grid-column: 2;
+  grid-row: 2;
+}
