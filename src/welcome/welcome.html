@@ -18,7 +18,7 @@
                 </div>
                 <div>
                     <label for="password_login">Password</label>
-                    <input type="password" name="password" id="password_login" size="17">
+                    <input type="password" name="password" id="password_login" size="17" oninput="return checkLength(this);" required>
                 </div>
                 <button name="login">Login</button>
             </fieldset>
@@ -57,11 +57,11 @@
               </div>
               <div>
                 <label for="password">Password</label>
-                <input type="password" name="password" id="password" size="17" oninput="return validatePassword();" required>
+                <input type="password" name="password" id="password" size="17" oninput="return checkLength(this);" required>
               </div>
               <div>
                 <label for="repeat_password">Repeat PSW</label>
-                <input type="password" name="repeat_password" id="repeat_password" size="17" oninput="return validatePassword();" required>
+                <input type="password" name="repeat_password" id="repeat_password" size="17" oninput="return isMatching(document.getElementById('password'), this);" required>
               </div>
 
               <button name="signup">Sign up</button>
