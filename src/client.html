@@ -23,16 +23,16 @@
               </fieldset>
           </form>
 
-          <form name="signup_form" id="signup_form" method="post"> <!--TODO: register-->
+          <form name="signup_form" id="signup_form" onsubmit="customFormSubmit()" method="post"> <!--TODO: register-->
             <fieldset>
               <h3 style="text-align: center">Sign up here</h3>
                 <div>
-                  <label for="first_name">First name</label>
-                  <input name="first_name" id="first_name" size="17" required>
+                  <label for="firstname">First name</label>
+                  <input name="firstname" id="first_name" size="17" required>
                 </div>
                 <div>
-                  <label for="family_name">Family name</label>
-                  <input name="family_name" id="family_name" size="17" required>
+                  <label for="familyname">Family name</label>
+                  <input name="familyname" id="family_name" size="17" required>
                 </div>
                 <div>
                   <label for="gender">Gender</label>
@@ -44,7 +44,7 @@
                 </div>
                 <div>
                   <label for="city">City</label>
-                  <input name="city" id="city" size="17">
+                  <input name="city" id="city" size="17" required>
                 </div>
                 <div>
                   <label for="country">Country</label>

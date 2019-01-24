@@ -21,3 +21,14 @@ function isMatching(password, repeat_password) {
       repeat_password.setCustomValidity("");
   }
 }
+
+function customFormSubmit(){
+  var form = document.getElementById("signup_form");
+  var fd = new FormData(form);
+  var jsonObj = {};
+  for (var [key, value] of fd.entries()) {
+    jsonObj[key] = value;
+  }
+  var message = serverstub.signUp(jsonObj);
+  alert(message.message)
+}
