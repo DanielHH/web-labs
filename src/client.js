@@ -1,9 +1,23 @@
 displayView = function(){
-    // the code required to display a view
+
 };
 window.onload = function(){
-    //code that is executed as the page is loaded.
-    //You shall put your own custom code here.
-    //window.alert() is not allowed to be used in your implementation.
-    window.alert("Hello TDDD97!");
+
+  displayView();
+}
+
+function checkLength(password) {
+    if (password.value.length < 8) {
+      password.setCustomValidity("password must be at least 8 characters long");
+    } else {
+      password.setCustomValidity("");
+  }
+}
+
+function isMatching(password, repeat_password) {
+    if (password.value != repeat_password.value) {
+      repeat_password.setCustomValidity("passwords must match");
+    } else {
+      repeat_password.setCustomValidity("");
+  }
 }
