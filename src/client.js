@@ -2,7 +2,7 @@ displayView = function(){
 
 };
 window.onload = function(){
-
+  document.body.innerHTML = document.getElementById("welcome_view").innerHTML;
   displayView();
 }
 
