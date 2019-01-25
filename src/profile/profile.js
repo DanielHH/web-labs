@@ -4,16 +4,15 @@ window.onload = function(){
 }
 
 function openPage(pageName, elmnt, color) {
-  var colors = ["#81A4CD", "#3E7CB1", "#054A91"];
   var i, tabcontent, tablinks;
 
   tabcontent = document.getElementsByClassName("tabcontent");
   tablinks = document.getElementsByClassName("tablink");
   for (i = 0; i < tabcontent.length; i++) {
     tabcontent[i].style.display = "none";
-    tablinks[i].style.backgroundColor = colors[i];
+    tablinks[i].style.backgroundColor = "";
   }
 
   document.getElementById(pageName).style.display = "block";
-  //elmnt.style.backgroundColor = color;
+  elmnt.style.backgroundColor = color;
 }

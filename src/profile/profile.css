@@ -10,11 +10,12 @@ body, html {
 /* Style tab links */
 .tablink {
   color: white;
+  background-color: #999;
   float: left;
   border: none;
   outline: none;
   cursor: pointer;
-  padding: 14px 16px;
+  padding: 14px;
   font-size: 17px;
   width: calc(100%  /3);
 }
@@ -25,7 +26,6 @@ body, html {
 
 /* Style the tab content (and add height:100% for full page content) */
 .tabcontent {
-
   display: none;
   padding: 100px 20px;
   height: 100%;
