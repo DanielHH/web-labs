@@ -22,6 +22,10 @@ function isMatching(password, repeat_password) {
   }
 }
 
+function clearValidation(element){
+  element.setCustomValidity("");
+}
+
 function customFormSubmit(){
   var form = document.getElementById("signup_form");
   var fd = new FormData(form);
@@ -29,14 +33,14 @@ function customFormSubmit(){
   for (var [key, value] of fd.entries()) {
     jsonObj[key] = value;
   }
+  
   var message = serverstub.signUp(jsonObj);
-
   var email = document.getElementById("email");
   if (message.success == false) {
     console.log("message is " + message.success);
-    email.setCustomValidity(message.message);
+    email.setCustomValidity(message.message); // Error doesn't show initially why?
+    return false;
   } else {
     email.setCustomValidity("");
   }
-  alert("hello");
 }

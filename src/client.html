@@ -23,7 +23,7 @@
               </fieldset>
           </form>
 
-          <form name="signup_form" id="signup_form" onsubmit="customFormSubmit()" method="post"> <!--TODO: register-->
+          <form name="signup_form" id="signup_form" onsubmit="return customFormSubmit()" method="post"> <!--TODO: register-->
             <fieldset>
               <h3 style="text-align: center">Sign up here</h3>
                 <div>
@@ -52,7 +52,7 @@
                 </div>
                 <div>
                   <label for="email">Email</label>
-                  <input type="email" name="email" id="email" size="17" required>
+                  <input type="email" name="email" id="email" size="17" oninput="clearValidation(this)" required>
                 </div>
                 <div>
                   <label for="password">Password</label>
