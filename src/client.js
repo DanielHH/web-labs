@@ -30,5 +30,13 @@ function customFormSubmit(){
     jsonObj[key] = value;
   }
   var message = serverstub.signUp(jsonObj);
-  alert(message.message)
+
+  var email = document.getElementById("email");
+  if (message.success == false) {
+    console.log("message is " + message.success);
+    email.setCustomValidity(message.message);
+  } else {
+    email.setCustomValidity("");
+  }
+  alert("hello");
 }
