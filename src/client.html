@@ -9,7 +9,7 @@
 
           <img class="center" id="wimage" src="../wimage.png"/>
 
-          <form id="login_form" method="post"> <!--TODO: login-->
+          <form id="login_form" onsubmit="return signIn()" method="post"> <!--TODO: login-->
                   <div>
                       <label for="email_login">Email</label>
                       <input type="email" name="email_login" id="email_login" size="17" required>
@@ -19,7 +19,9 @@
                       <input type="password" name="password" id="password_login" size="17" oninput="return checkLength(this);" required>
                   </div>
                   <button name="login">Login</button>
+                  <p id="login_error"></p>
           </form>
+
 
           <form name="signup_form" id="signup_form" onsubmit="return customFormSubmit()" method="post"> <!--TODO: register-->
               <h3 style="text-align: center">Sign up here</h3>

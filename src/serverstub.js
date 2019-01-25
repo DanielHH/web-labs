@@ -132,7 +132,6 @@ var serverstub = (function() {
     },
 
     signUp: function(inputObject){ // {email, password, firstname, familyname, gender, city, country}
-      console.log(inputObject);
       syncStorage();
       if (users[inputObject.email] === undefined){
         if(

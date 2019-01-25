@@ -2,7 +2,12 @@ displayView = function(){
 
 };
 window.onload = function(){
-  document.body.innerHTML = document.getElementById("welcome_view").innerHTML;
+  if (localStorage.getItem("user_token") != "") {
+      document.body.innerHTML = document.getElementById("profile_view").innerHTML;
+  } else {
+      document.body.innerHTML = document.getElementById("welcome_view").innerHTML;
+  }
+
   displayView();
 }
 
@@ -28,19 +33,39 @@ function clearValidation(element){
 
 function customFormSubmit(){
   var form = document.getElementById("signup_form");
+  var jsonObj = getFormData(form);
+  var message = serverstub.signUp(jsonObj);
+  var email = document.getElementById("email");
+
+  if (message.success == false) {
+    email.setCustomValidity(message.message); // Error doesn't show initially why?
+    return false;
+  } else {
+    document.body.innerHTML = document.getElementById("profile_view").innerHTML;
+  }
+}
+
+function signIn(){
+  var form = document.getElementById("login_form");
+  var jsonObj = getFormData(form);
+  var response = serverstub.signIn(jsonObj.email_login, jsonObj.password);
+  console.log(response);
+
+  if (!response.success){
+    document.getElementById("login_error").innerHTML = response.message;
+    return false;
+  } else {
+    localStorage.setItem("user_token", response.data);
+    document.body.innerHTML = document.getElementById("profile_view").innerHTML;
+  }
+}
+
+function getFormData(form){
   var fd = new FormData(form);
   var jsonObj = {};
   for (var [key, value] of fd.entries()) {
     jsonObj[key] = value;
   }
 
-  var message = serverstub.signUp(jsonObj);
-  var email = document.getElementById("email");
-  if (message.success == false) {
-    console.log("message is " + message.success);
-    email.setCustomValidity(message.message); // Error doesn't show initially why?
-    return false;
-  } else {
-    document.body.innerHTML = document.getElementById("profile_view").innerHTML;
-  }
+  return jsonObj;
 }
