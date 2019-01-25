@@ -33,7 +33,7 @@ function customFormSubmit(){
   for (var [key, value] of fd.entries()) {
     jsonObj[key] = value;
   }
-  
+
   var message = serverstub.signUp(jsonObj);
   var email = document.getElementById("email");
   if (message.success == false) {
@@ -41,6 +41,6 @@ function customFormSubmit(){
     email.setCustomValidity(message.message); // Error doesn't show initially why?
     return false;
   } else {
-    email.setCustomValidity("");
+    document.body.innerHTML = document.getElementById("profile_view").innerHTML;
   }
 }
