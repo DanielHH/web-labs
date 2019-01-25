@@ -10,7 +10,6 @@
           <img class="center" id="wimage" src="../wimage.png"/>
 
           <form id="login_form" method="post"> <!--TODO: login-->
-              <fieldset>
                   <div>
                       <label for="email_login">Email</label>
                       <input type="email" name="email_login" id="email_login" size="17" required>
@@ -20,51 +19,47 @@
                       <input type="password" name="password" id="password_login" size="17" oninput="return checkLength(this);" required>
                   </div>
                   <button name="login">Login</button>
-              </fieldset>
           </form>
 
           <form name="signup_form" id="signup_form" onsubmit="return customFormSubmit()" method="post"> <!--TODO: register-->
-            <fieldset>
               <h3 style="text-align: center">Sign up here</h3>
-                <div>
-                  <label for="firstname">First name</label>
-                  <input name="firstname" id="first_name" size="17" required>
-                </div>
-                <div>
-                  <label for="familyname">Family name</label>
-                  <input name="familyname" id="family_name" size="17" required>
-                </div>
-                <div>
-                  <label for="gender">Gender</label>
-                  <select name="gender" id="gender" required>
-                      <option>Male</option>
-                      <option>Female</option>
-                      <option>Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="city">City</label>
-                  <input name="city" id="city" size="17" required>
-                </div>
-                <div>
-                  <label for="country">Country</label>
-                  <input name="country" id="country" size="17" required>
-                </div>
-                <div>
-                  <label for="email">Email</label>
-                  <input type="email" name="email" id="email" size="17" oninput="clearValidation(this)" required>
-                </div>
-                <div>
-                  <label for="password">Password</label>
-                  <input type="password" name="password" id="password" size="17" oninput="return checkLength(this);" required>
-                </div>
-                <div>
-                  <label for="repeat_password">Repeat PSW</label>
-                  <input type="password" name="repeat_password" id="repeat_password" size="17" oninput="return isMatching(document.getElementById('password'), this);" required>
-                </div>
-
-                <button name="signup">Sign up</button>
-            </fieldset>
+              <div>
+                <label for="firstname">First name</label>
+                <input name="firstname" id="first_name" size="17" required>
+              </div>
+              <div>
+                <label for="familyname">Family name</label>
+                <input name="familyname" id="family_name" size="17" required>
+              </div>
+              <div>
+                <label for="gender">Gender</label>
+                <select name="gender" id="gender" required>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="city">City</label>
+                <input name="city" id="city" size="17" required>
+              </div>
+              <div>
+                <label for="country">Country</label>
+                <input name="country" id="country" size="17" required>
+              </div>
+              <div>
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" size="17" oninput="clearValidation(this)" required>
+              </div>
+              <div>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" size="17" oninput="return checkLength(this);" required>
+              </div>
+              <div>
+                <label for="repeat_password">Repeat PSW</label>
+                <input type="password" name="repeat_password" id="repeat_password" size="17" oninput="return isMatching(document.getElementById('password'), this);" required>
+              </div>
+              <button name="signup">Sign up</button>
           </form>
 
         </div></script>
