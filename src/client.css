@@ -1,5 +1,7 @@
 body {
   background-color: #6998ce;
+  height: 100%;
+  margin: 0;
 }
 
 .center {
@@ -7,15 +9,15 @@ body {
   justify-content: center;
 }
 
-.welcome-form-button {
-  float: right;
-  margin: 3px;
-}
-
 .welcome-form {
   padding: 0;
   background-color: #FFFFFF;
   height: 100%;
+}
+
+.welcome-form > button {
+  float: right;
+  margin: 3px;
 }
 
 .welcome-form > div {
@@ -31,6 +33,44 @@ body {
 .welcome-form > div > input {
     width: 25px;
     float: right;
+}
+
+/* Style tab links */
+.tablink {
+  color: white;
+  background-color: #999;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px;
+  font-size: 17px;
+  width: calc(100%  /3);
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  display: none;
+  padding: 100px 20px;
+  height: 100%;
+}
+
+#change_psw_form {
+    background-color: #FFFFFF;
+}
+
+#change_psw_form > div > label {
+  display: inline-block;
+  text-align: left;
+  width: 125px;
+}
+
+#change_psw_form > div {
+  margin-bottom: 5px;
 }
 
 #container {

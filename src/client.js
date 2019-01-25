@@ -3,9 +3,16 @@ displayView = function(){
 };
 window.onload = function(){
   if (localStorage.getItem("user_token") != "") {
-      document.body.innerHTML = document.getElementById("profile_view").innerHTML;
+      var profile_view = document.getElementById("profile_view");
+      if (profile_view != null) {
+          document.body.innerHTML = profile_view.innerHTML;
+          document.getElementById("defaultOpen").click();
+      }
   } else {
-      document.body.innerHTML = document.getElementById("welcome_view").innerHTML;
+    var welcome_view = document.getElementById("welcome_view");
+    if (welcome_view != null) {
+        document.body.innerHTML = welcome_view.innerHTML;
+    }
   }
 
   displayView();
@@ -68,4 +75,35 @@ function getFormData(form){
   }
 
   return jsonObj;
+}
+
+function openPage(pageName, elmnt, color) {
+  var i, tabcontent, tablinks;
+
+  tabcontent = document.getElementsByClassName("tabcontent");
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+    tablinks[i].style.backgroundColor = "";
+  }
+
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+}
+
+function changePassword() {
+  var form = document.getElementById("change_psw_form");
+  var jsonObj = getFormData(form);
+  var response = serverstub.changePassword(localStorage.getItem("user_token"), jsonObj.old_password, jsonObj.new_password);
+  var statusText = document.getElementById("change_psw_status");
+  statusText.innerHTML = response.message;
+  if (response.success) {
+    var elements = document.getElementsByTagName("input");
+    for (var i=0; i < elements.length; i++) {
+      if (elements[i].type == "password") {
+        elements[i].value = "";
+      }
+    }
+  }
+  return false;
 }
