@@ -27,9 +27,9 @@ function fill_person_info(email="") {
 
   for (key in response.data) {
     if (email=="") {
-      document.getElementById(key).innerHTML += response.data[key];
+      document.getElementById(key).innerHTML = response.data[key];
     } else {
-      document.getElementById("b_" + key).innerHTML += response.data[key];
+      document.getElementById("b_" + key).innerHTML = response.data[key];
     }
   }
 }
@@ -129,10 +129,14 @@ function changePassword() {
 }
 
 
-function postMessage() {
+function postMessage(email = null) {
   var form = document.getElementById("post_form");
+  if (email != null) {
+    form = document.getElementById("b_post_form");
+  }
   var message = getFormData(form);
-  var response = serverstub.postMessage(localStorage.getItem("user_token"), message.message, null);
+  var response = serverstub.postMessage(localStorage.getItem("user_token"), message.message, email.value);
+  console.log("response");
   if (response.success) {
       getPosts();
       form.reset();

@@ -10,12 +10,12 @@
 
           <div id="home" class="tabcontent">
             <div id="personal_information" class="flex-item">
-              <label id="firstname">First name: </label></br>
-              <label id="familyname">Last name: </label></br>
-              <label id="email">Email: </label></br>
-              <label id="gender">Gender: </label></br>
-              <label id="city">City: </label></br>
-              <label id="country">Country: </label></br>
+              First name: <label id="firstname"></label></br>
+              Last name: <label id="familyname"></label></br>
+              Email: <label id="email"></label></br>
+              Gender: <label id="gender"></label></br>
+              City: <label id="city"></label></br>
+              Country: <label id="country"></label></br>
             </div>
 
             <div id="post_area_wrapper" class="flex-item">
@@ -42,18 +42,18 @@
             </form>
             <div id="b_home" >
               <div id="personal_information" class="flex-item">
-                <label id="b_firstname">First name: </label></br>
-                <label id="b_familyname">Last name: </label></br>
-                <label id="b_email">Email: </label></br>
-                <label id="b_gender">Gender: </label></br>
-                <label id="b_city">City: </label></br>
-                <label id="b_country">Country: </label></br>
+                First name: <label id="b_firstname"></label></br>
+                Last name: <label id="b_familyname"></label></br>
+                Email: <label id="b_email"></label></br>
+                Gender: <label id="b_gender"></label></br>
+                City: <label id="b_city"></label></br>
+                Country: <label id="b_country"></label></br>
               </div>
 
               <div id="post_area_wrapper" class="flex-item">
-                <form id="post_form" class="flex-item">
+                <form id="b_post_form" class="flex-item">
                   <textarea name="message" rows="4"></textarea>
-                  <button style="float: right;" onclick="return postMessage()">SUBMIT</button>
+                  <button style="float: right;" onclick="return postMessage(document.getElementById('b_email'))">SUBMIT</button>
                 </form>
 
                 <button id="refresh_button" class="flex-item" onclick="getPosts()">REFRESH</button>
