@@ -44,7 +44,7 @@ function clearValidation(element){
   element.setCustomValidity("");
 }
 
-function customFormSubmit(){
+function signUp(){
   var form = document.getElementById("signup_form");
   var jsonObj = getFormData(form);
   var message = serverstub.signUp(jsonObj);
@@ -54,22 +54,26 @@ function customFormSubmit(){
     email.setCustomValidity(message.message); // Error doesn't show initially why?
     return false;
   } else {
-    document.body.innerHTML = document.getElementById("profile_view").innerHTML;
+    signIn(jsonObj.email, jsonObj.password);
+    return true;
   }
 }
 
-function signIn(){
-  var form = document.getElementById("login_form");
-  var jsonObj = getFormData(form);
-  var response = serverstub.signIn(jsonObj.email_login, jsonObj.password);
-  console.log(response);
+function signIn(email = "", password = ""){
+  if (email == "") {
+    var form = document.getElementById("login_form");
+    var jsonObj = getFormData(form);
+    var response = serverstub.signIn(jsonObj.email_login, jsonObj.password);
+  } else {
+    var response = serverstub.signIn(email, password);
+  }
 
   if (!response.success){
     document.getElementById("login_error").innerHTML = response.message;
     return false;
   } else {
     localStorage.setItem("user_token", response.data);
-    document.body.innerHTML = document.getElementById("profile_view").innerHTML;
+    //location.reload();
   }
 }
 
