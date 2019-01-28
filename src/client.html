@@ -36,8 +36,35 @@
 
 
           <div id="browse" class="tabcontent">
-            <h3>Browse</h3>
-            <p>Here you can browse stuff</p>
+            <form>
+              <input type="text"></input>
+              <button>SEARCH</button>
+            </form>
+            <div id="b_home" >
+              <div id="personal_information" class="flex-item">
+                <label id="b_firstname">First name: </label></br>
+                <label id="b_familyname">Last name: </label></br>
+                <label id="b_email">Email: </label></br>
+                <label id="b_gender">Gender: </label></br>
+                <label id="b_city">City: </label></br>
+                <label id="b_country">Country: </label></br>
+              </div>
+
+              <div id="post_area_wrapper" class="flex-item">
+                <form id="post_form" class="flex-item">
+                  <textarea name="message" rows="4"></textarea>
+                  <button style="float: right;" onclick="return postMessage()">SUBMIT</button>
+                </form>
+
+                <button id="refresh_button" class="flex-item" onclick="getPosts()">REFRESH</button>
+
+                <div id="feed" class="flex-item">
+                </div>
+              </div>
+
+              <div style="flex: 3">
+              </div>
+            </div>
           </div>
 
           <div id="account" class="tabcontent">

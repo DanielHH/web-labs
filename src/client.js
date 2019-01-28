@@ -6,11 +6,7 @@ window.onload = function(){
       var profile_view = document.getElementById("profile_view");
       document.body.innerHTML = profile_view.innerHTML;
       document.getElementById("defaultOpen").click();
-      var personal_information = document.getElementById("personal_information");
-      var response = serverstub.getUserDataByToken(localStorage.getItem("user_token"))
-      for (key in response.data) {
-        document.getElementById(key).innerHTML += response.data[key];
-      }
+      fill_person_info();
       getPosts();
   } else {
     var welcome_view = document.getElementById("welcome_view");
@@ -20,6 +16,22 @@ window.onload = function(){
   }
 
   displayView();
+}
+
+function fill_person_info(email="") {
+  if (email =="") {
+      var response = serverstub.getUserDataByToken(localStorage.getItem("user_token"));
+  } else {
+      var response = serverstub.getUserDataByEmail(localStorage.getItem("user_token"),email);
+  }
+
+  for (key in response.data) {
+    if (email=="") {
+      document.getElementById(key).innerHTML += response.data[key];
+    } else {
+      document.getElementById("b_" + key).innerHTML += response.data[key];
+    }
+  }
 }
 
 function checkLength(password) {
@@ -82,6 +94,7 @@ function getFormData(form){
   }
 
   return jsonObj;
+
 }
 
 function openPage(pageName, elmnt, color) {

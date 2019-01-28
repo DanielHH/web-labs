@@ -75,6 +75,16 @@ body {
   align-items: flex-start;
 }
 
+#browse {
+  display: flex;
+  flex-direction: column;
+}
+
+#b_home {
+  display: flex;
+  align-items: flex-start;
+}
+
 #personal_information {
   justify-content: flex-start;
   flex: 1;
