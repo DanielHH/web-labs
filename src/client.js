@@ -9,9 +9,6 @@ window.onload = function(){
       var personal_information = document.getElementById("personal_information");
       var response = serverstub.getUserDataByToken(localStorage.getItem("user_token"))
 
-      if (JSON.parse(response.data) instanceof JSONObject) {
-        alert("HASD");
-      }
 
   } else {
     var welcome_view = document.getElementById("welcome_view");
@@ -53,22 +50,26 @@ function customFormSubmit(){
     email.setCustomValidity(message.message); // Error doesn't show initially why?
     return false;
   } else {
-    document.body.innerHTML = document.getElementById("profile_view").innerHTML;
+    signIn(jsonObj.email, jsonObj.password);
+    return true;
   }
 }
 
-function signIn(){
+function signIn(email = "", password = ""){
   var form = document.getElementById("login_form");
   var jsonObj = getFormData(form);
-  var response = serverstub.signIn(jsonObj.email_login, jsonObj.password);
-  console.log(response);
+  if (email == "") {
+    var response = serverstub.signIn(jsonObj.email_login, jsonObj.password);
+  } else {
+    var response = serverstub.signIn(email, password);
+  }
 
   if (!response.success){
     document.getElementById("login_error").innerHTML = response.message;
     return false;
   } else {
     localStorage.setItem("user_token", response.data);
-    document.body.innerHTML = document.getElementById("profile_view").innerHTML;
+    //location.reload();
   }
 }
 
