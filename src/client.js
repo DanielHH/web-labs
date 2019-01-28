@@ -139,16 +139,17 @@ function postMessage(email = null) {
   return false;
 }
 
-function getPosts(email = "") {
+function getPosts(email = null) {
   var feed = document.getElementById("feed");
-  if (email == "") {
-    var response = serverstub.getUserMessagesByToken(localStorage.getItem("user_token"));
+  var response;
+  if (email == null) {
+    response = serverstub.getUserMessagesByToken(localStorage.getItem("user_token"));
   } else {
-      feed = document.getElementById("b_feed");
-      var response = serverstub.getUserMessagesByEmail(localStorage.getItem("user_token"), email);
+    feed = document.getElementById("b_feed");
+    response = serverstub.getUserMessagesByEmail(localStorage.getItem("user_token"), email);
   }
   feed.innerHTML = "";
-
+  console.log(response);
   if (response.success) {
     for (i = 0; i < response.data.length; i++) {
       var node = document.createElement("div");
