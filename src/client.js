@@ -70,7 +70,6 @@ function signIn(email = "", password = ""){
     return false;
   } else {
     localStorage.setItem("user_token", response.data);
-    //location.reload();
   }
 }
 
