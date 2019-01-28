@@ -85,7 +85,7 @@ var serverstub = (function() {
     },
 
     getUserDataByEmail: function(token, email){
-	syncStorage();
+	     syncStorage();
       if (loggedInUsers[token] != null){
         if (users[email] != null) {
           var match = copyUser(users[email]);
