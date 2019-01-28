@@ -107,7 +107,7 @@ var serverstub = (function() {
     },
 
     getUserMessagesByEmail: function(token, email){
-	syncStorage();
+	    syncStorage();
       if (loggedInUsers[token] != null){
         if (users[email] != null) {
           var match = copyUser(users[email]).messages;

@@ -113,3 +113,20 @@ function changePassword() {
   }
   return false;
 }
+
+function postMessage() {
+  var form = document.getElementById("post_form");
+  var message = getFormData(form);
+  console.log(message);
+  alert("sdfadfs");
+  var response = serverstub.postMessage(localStorage.getItem("user_token"), message.message, null);
+  console.log(response);
+  alert("sdfsdfsdf");
+  // show response.message
+  if (response.success) {
+    var node = document.createElement("LI");                 // Create a <li> node
+    var textnode = document.createTextNode(message);         // Create a text node
+    node.appendChild(textnode);                              // Append the text to <li>
+    document.getElementById("feed").appendChild(node);     // Append <li> to <ul> with id="myList"
+  }
+}

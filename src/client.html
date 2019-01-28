@@ -20,13 +20,13 @@
 
             <div id="post_area_wrapper" class="flex-item">
               <form id="post_form" class="flex-item">
-                <textarea rows="4"></textarea>
-                <button style="float: right;">SUBMIT</button>
+                <textarea name="message" rows="4"></textarea>
+                <button style="float: right;" onclick="postMessage()">SUBMIT</button>
               </form>
 
               <button id="refresh_button" class="flex-item">REFRESH</button>
 
-              <ol id="feed" class="flex-item">
+              <ol id="feed" class="flex-item" onload="getPosts()">
                 <li>ASDASD</li>
                 <li>ASDASD</li>
                 <li>ASDASD</li>
