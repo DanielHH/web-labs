@@ -131,9 +131,7 @@ function postMessage(email = null) {
     form = document.getElementById("b_post_form");
   }
   var message = getFormData(form);
-  console.log(email);
   var response = serverstub.postMessage(localStorage.getItem("user_token"), message.message, email);
-  console.log(response);
   if (response.success) {
       getPosts(email);
       form.reset();
@@ -142,7 +140,6 @@ function postMessage(email = null) {
 }
 
 function getPosts(email = "") {
-  console.log(email);
   var feed = document.getElementById("feed");
   if (email == "") {
     var response = serverstub.getUserMessagesByToken(localStorage.getItem("user_token"));
@@ -152,12 +149,15 @@ function getPosts(email = "") {
   }
   feed.innerHTML = "";
 
-  for (i = 0; i < response.data.length; i++) {
-    var node = document.createElement("div");
-    var textnode = document.createTextNode(response.data[i].content);
-    node.appendChild(textnode);
-    feed.appendChild(node);
+  if (response.success) {
+    for (i = 0; i < response.data.length; i++) {
+      var node = document.createElement("div");
+      var textnode = document.createTextNode(response.data[i].content);
+      node.appendChild(textnode);
+      feed.appendChild(node);
+    }
   }
+
 }
 
 function searchUser() {
