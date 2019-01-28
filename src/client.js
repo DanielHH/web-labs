@@ -113,3 +113,17 @@ function changePassword() {
   }
   return false;
 }
+
+function getPosts() {
+  document.getElementById("feed").innerHTML = "";
+  var response = serverstub.getUserMessagesByToken(localStorage.getItem("user_token"));
+  response.data[0] = "ASD";
+  response.data[1] = "ASD";
+  var feed = document.getElementById("feed")
+  for (i = 0; i < response.data.length; i++) {
+    var node = document.createElement("LI");
+    var textnode = document.createTextNode(response.data[i]);
+    node.appendChild(textnode);
+    feed.appendChild(node);
+  }
+}
