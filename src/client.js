@@ -122,6 +122,7 @@ function postMessage() {
   var response = serverstub.postMessage(localStorage.getItem("user_token"), message.message, null);
   if (response.success) {
       getPosts();
+      form.reset();
   }
   return false;
 }
