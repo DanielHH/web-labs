@@ -1,21 +1,16 @@
-displayView = function(){
-
+function displayView(view){
+  document.body.innerHTML = document.getElementById(view).innerHTML;
 };
+
 window.onload = function(){
   if (localStorage.getItem("user_token") != "") {
-      var profile_view = document.getElementById("profile_view");
-      document.body.innerHTML = profile_view.innerHTML;
-      document.getElementById("defaultOpen").click();
-      fill_person_info();
-      getPosts();
+    displayView("profile_view");
+    document.getElementById("defaultOpen").click();
+    fill_person_info();
+    getPosts();
   } else {
-    var welcome_view = document.getElementById("welcome_view");
-    if (welcome_view != null) {
-        document.body.innerHTML = welcome_view.innerHTML;
-    }
+    displayView("welcome_view");
   }
-
-  displayView();
 }
 
 function fill_person_info(email="") {
@@ -27,9 +22,9 @@ function fill_person_info(email="") {
   if (response.success) {
     for (key in response.data) {
       if (email=="") {
-        document.getElementById(key).innerHTML += response.data[key];
+        document.getElementById(key).innerHTML = response.data[key];
       } else {
-        document.getElementById("b_" + key).innerHTML += response.data[key];
+        document.getElementById("b_" + key).innerHTML = response.data[key];
       }
     }
   } else {
@@ -66,11 +61,11 @@ function signUp(){
 
   if (message.success == false) {
     email.setCustomValidity(message.message); // Error doesn't show initially why?
-    return false;
   } else {
     signIn(jsonObj.email, jsonObj.password);
-    return true;
+    displayView("profile_view");
   }
+  return false;
 }
 
 function signIn(email = "", password = ""){
@@ -174,6 +169,18 @@ function searchUser() {
     inputField.setCustomValidity(response);
   } else {
     sessionStorage.setItem("searched_user", formData.userEmail);
+    getPosts(formData.userEmail);
+    form.reset();
   }
   return false;
+}
+
+function signOut() {
+  var token = localStorage.getItem("user_token");
+  var response = serverstub.signOut(token);
+  if (response.success) {
+    sessionStorage.setItem("searched_user", null);
+    localStorage.setItem("user_token", "");
+    displayView("welcome_view");
+  }
 }

@@ -91,6 +91,11 @@ body {
   flex-direction: column;
 }
 
+#account {
+  display: flex;
+  flex-direction: column;
+}
+
 #b_home {
   display: flex;
   align-items: flex-start;
@@ -104,6 +109,7 @@ body {
 
 #change_psw_form {
     background-color: #FFFFFF;
+    align-self: flex-start;
 }
 
 #change_psw_form > div > label {
