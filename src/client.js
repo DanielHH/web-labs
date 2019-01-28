@@ -24,14 +24,27 @@ function fill_person_info(email="") {
   } else {
       var response = serverstub.getUserDataByEmail(localStorage.getItem("user_token"),email);
   }
+<<<<<<< HEAD
 
   for (key in response.data) {
     if (email=="") {
       document.getElementById(key).innerHTML = response.data[key];
     } else {
       document.getElementById("b_" + key).innerHTML = response.data[key];
+=======
+  if (response.success) {
+    for (key in response.data) {
+      if (email=="") {
+        document.getElementById(key).innerHTML += response.data[key];
+      } else {
+        document.getElementById("b_" + key).innerHTML += response.data[key];
+      }
+>>>>>>> master
     }
+  } else {
+    return response.message;
   }
+
 }
 
 function checkLength(password) {
@@ -154,4 +167,15 @@ function getPosts() {
     node.appendChild(textnode);
     feed.appendChild(node);
   }
+}
+
+function searchUser() {
+  var form = document.getElementById("user_search_form");
+  var formData = getFormData(form);
+  var response = fill_person_info(formData.userEmail);
+  if(response != null) {
+    var inputField = document.getElementById("search_user_email_field");
+    inputField.setCustomValidity(response);
+  }
+  return false;
 }

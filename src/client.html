@@ -36,10 +36,11 @@
 
 
           <div id="browse" class="tabcontent">
-            <form>
-              <input type="text"></input>
+            <form id="user_search_form" onsubmit="return searchUser();">
+            <input id="search_user_email_field" name="userEmail" type="text" oninput="clearValidation(this)"></input>
               <button>SEARCH</button>
             </form>
+
             <div id="b_home" >
               <div id="personal_information" class="flex-item">
                 First name: <label id="b_firstname"></label></br>
