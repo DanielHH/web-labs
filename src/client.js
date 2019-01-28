@@ -149,7 +149,7 @@ function getPosts(email = null) {
     response = serverstub.getUserMessagesByEmail(localStorage.getItem("user_token"), email);
   }
   feed.innerHTML = "";
-  console.log(response);
+  
   if (response.success) {
     for (i = 0; i < response.data.length; i++) {
       var node = document.createElement("div");
