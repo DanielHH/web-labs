@@ -19,14 +19,14 @@
             </div>
 
             <div id="post_area_wrapper" class="flex-item">
-              <form id="post_form" class="flex-item">
+              <form id="post_form" class="flex-item post-form">
                 <textarea name="message" rows="4"></textarea>
                 <button style="float: right;" onclick="return postMessage()">SUBMIT</button>
               </form>
 
               <button id="refresh_button" class="flex-item" onclick="getPosts()">REFRESH</button>
 
-              <div id="feed" class="flex-item">
+              <div id="feed" class="flex-item feed">
               </div>
             </div>
 
@@ -52,14 +52,14 @@
               </div>
 
               <div id="post_area_wrapper" class="flex-item">
-                <form id="b_post_form" class="flex-item">
+                <form id="b_post_form" class="flex-item post-form">
                   <textarea name="message" rows="4"></textarea>
-                  <button style="float: right;" onclick="return postMessage(document.getElementById('b_email'))">SUBMIT</button>
+                  <button style="float: right;" onclick="return postMessage(sessionStorage.getItem('searched_user'))">SUBMIT</button>
                 </form>
 
-                <button id="refresh_button" class="flex-item" onclick="getPosts()">REFRESH</button>
+                <button id="refresh_button" class="flex-item" onclick="getPosts(sessionStorage.getItem('searched_user'))">REFRESH</button>
 
-                <div id="feed" class="flex-item">
+                <div id="b_feed" class="flex-item feed">
                 </div>
               </div>
 

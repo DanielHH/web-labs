@@ -24,14 +24,6 @@ function fill_person_info(email="") {
   } else {
       var response = serverstub.getUserDataByEmail(localStorage.getItem("user_token"),email);
   }
-<<<<<<< HEAD
-
-  for (key in response.data) {
-    if (email=="") {
-      document.getElementById(key).innerHTML = response.data[key];
-    } else {
-      document.getElementById("b_" + key).innerHTML = response.data[key];
-=======
   if (response.success) {
     for (key in response.data) {
       if (email=="") {
@@ -39,7 +31,6 @@ function fill_person_info(email="") {
       } else {
         document.getElementById("b_" + key).innerHTML += response.data[key];
       }
->>>>>>> master
     }
   } else {
     return response.message;
@@ -105,9 +96,7 @@ function getFormData(form){
   for (var [key, value] of fd.entries()) {
     jsonObj[key] = value;
   }
-
   return jsonObj;
-
 }
 
 function openPage(pageName, elmnt, color) {
@@ -141,26 +130,33 @@ function changePassword() {
   return false;
 }
 
-
 function postMessage(email = null) {
   var form = document.getElementById("post_form");
   if (email != null) {
     form = document.getElementById("b_post_form");
   }
   var message = getFormData(form);
-  var response = serverstub.postMessage(localStorage.getItem("user_token"), message.message, email.value);
-  console.log("response");
+  console.log(email);
+  var response = serverstub.postMessage(localStorage.getItem("user_token"), message.message, email);
+  console.log(response);
   if (response.success) {
-      getPosts();
+      getPosts(email);
       form.reset();
   }
   return false;
 }
 
-function getPosts() {
-  document.getElementById("feed").innerHTML = "";
-  var response = serverstub.getUserMessagesByToken(localStorage.getItem("user_token"));
-  var feed = document.getElementById("feed")
+function getPosts(email = "") {
+  console.log(email);
+  var feed = document.getElementById("feed");
+  if (email == "") {
+    var response = serverstub.getUserMessagesByToken(localStorage.getItem("user_token"));
+  } else {
+      feed = document.getElementById("b_feed");
+      var response = serverstub.getUserMessagesByEmail(localStorage.getItem("user_token"), email);
+  }
+  feed.innerHTML = "";
+
   for (i = 0; i < response.data.length; i++) {
     var node = document.createElement("div");
     var textnode = document.createTextNode(response.data[i].content);
@@ -176,6 +172,8 @@ function searchUser() {
   if(response != null) {
     var inputField = document.getElementById("search_user_email_field");
     inputField.setCustomValidity(response);
+  } else {
+    sessionStorage.setItem("searched_user", formData.userEmail);
   }
   return false;
 }

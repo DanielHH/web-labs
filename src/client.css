@@ -63,6 +63,17 @@ body {
   margin: 5px;
 }
 
+.post-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+}
+
+.feed {
+  list-style-type: none;
+  background-color: white;
+}
+
 #post_area_wrapper {
   display: flex;
   flex-direction: column;
@@ -88,23 +99,6 @@ body {
 #personal_information {
   justify-content: flex-start;
   flex: 1;
-  background-color: white;
-}
-
-#post_form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 0;
-}
-
-#b_post_form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 0;
-}
-
-#feed {
-  list-style-type: none;
   background-color: white;
 }
 
