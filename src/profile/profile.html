@@ -14,23 +14,39 @@
   <button class="tablink" onclick="openPage('account', this, '#054A91')">Account</button>
 
   <div id="home" class="tabcontent">
-    <div id="personal_information">
-      Name: <span>JOHN DOE</span></br>
-      Email: <span>tjelvar@mobspine.com</span></br>
-      Gender: <span>APACHE</span></br>
-      City: <span>LINKÖPING</span></br>
-      Country: <span>SWEDEN</span></br>
+    <div id="personal_information" class="flex-item">
+      <label>Name: </label></br>
+      <label>Email: </label></br>
+      <label>Gender: </label></br>
+      <label>City: </label></br>
+      <label>Country: </label></br>
     </div>
 
-    <div id="post_area">
+    <div id="post_area_wrapper" class="flex-item">
+      <form id="post_form" class="flex-item">
+        <textarea rows="4"></textarea>
+        <button style="float: right;">SUBMIT</button>
+      </form>
+
+
+
+      <button id="refresh_button" class="flex-item">REFRESH</button>
+
+      <ol id="feed" class="flex-item">
+        <li>ASDASD</li>
+        <li>ASDASD</li>
+        <li>ASDASD</li>
+        <li>ASDASD</li>
+        <li>ASDASD</li>
+        <li>ASDASD</li>
+
+      </ol>
     </div>
 
-    <button id="refresh_button">REFRESH</button>
-
-    <div id="feed">
+    <div style="flex: 3">
     </div>
-
   </div>
+
 
   <div id="browse" class="tabcontent">
     <h3>Browse</h3>

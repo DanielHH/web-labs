@@ -4,10 +4,15 @@ displayView = function(){
 window.onload = function(){
   if (localStorage.getItem("user_token") != "") {
       var profile_view = document.getElementById("profile_view");
-      if (profile_view != null) {
-          document.body.innerHTML = profile_view.innerHTML;
-          document.getElementById("defaultOpen").click();
+      document.body.innerHTML = profile_view.innerHTML;
+      document.getElementById("defaultOpen").click();
+      var personal_information = document.getElementById("personal_information");
+      var response = serverstub.getUserDataByToken(localStorage.getItem("user_token"))
+
+      if (JSON.parse(response.data) instanceof JSONObject) {
+        alert("HASD");
       }
+
   } else {
     var welcome_view = document.getElementById("welcome_view");
     if (welcome_view != null) {
