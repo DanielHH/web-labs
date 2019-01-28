@@ -8,12 +8,9 @@ window.onload = function(){
       document.getElementById("defaultOpen").click();
       var personal_information = document.getElementById("personal_information");
       var response = serverstub.getUserDataByToken(localStorage.getItem("user_token"))
-      console.log(response.data);
       for (key in response.data) {
-        document.getElementById(key).innerHTML = response.data[key];
+        document.getElementById(key).innerHTML += response.data[key];
       }
-      //document.getElementById("name").innerHTML = response.data.firstname;
-
   } else {
     var welcome_view = document.getElementById("welcome_view");
     if (welcome_view != null) {
