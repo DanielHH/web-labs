@@ -56,13 +56,14 @@ function clearValidation(element){
 function signUp(){
   var form = document.getElementById("signup_form");
   var jsonObj = getFormData(form);
-  var message = serverstub.signUp(jsonObj);
+  var response = serverstub.signUp(jsonObj);
   var email = document.getElementById("email");
 
-  if (message.success == false) {
-    email.setCustomValidity(message.message); // Error doesn't show initially why?
+  if (response.success == false) {
+    email.setCustomValidity(response.message); // Error doesn't show initially why?
   } else {
     signIn(jsonObj.email, jsonObj.password);
+    fill_person_info();
     displayView("profile_view");
   }
   return false;
@@ -149,7 +150,7 @@ function getPosts(email = null) {
     response = serverstub.getUserMessagesByEmail(localStorage.getItem("user_token"), email);
   }
   feed.innerHTML = "";
-  
+
   if (response.success) {
     for (i = 0; i < response.data.length; i++) {
       var node = document.createElement("div");
