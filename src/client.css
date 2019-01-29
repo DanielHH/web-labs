@@ -2,6 +2,8 @@ body {
   background-color: #6998ce;
   height: 100%;
   margin: 0;
+  font-family: "Times New Roman";
+
 }
 
 .center {
@@ -16,23 +18,37 @@ body {
 }
 
 .welcome-form > button {
-  float: right;
   margin: 3px;
+  float: right;
 }
 
 .welcome-form > div {
   margin-bottom: 4px;
 }
 
+.welcome-form > h3 {
+  margin-top: 8px;
+}
+
 .welcome-form > div > label {
-  display: inline-block;
   text-align: left;
   width: 85px;
-}​
+}
 
 .welcome-form > div > input {
-    width: 25px;
-    float: right;
+  float: right;
+  margin-right: 3px;
+  width: 140px;
+  height: 15px;
+  padding: 0px;
+  -moz-appearance: none;
+}
+
+.welcome-form > div > select {
+  float: right;
+  margin-right: 3px;
+  padding: 0px;
+  -moz-appearance: none;
 }
 
 /* Style tab links */
