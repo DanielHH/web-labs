@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+import database_helper as db_helper
 import os.path
 
 app = Flask(__name__)
@@ -8,12 +10,8 @@ app = Flask(__name__)
 db_uri = 'sqlite:///{}'.format(db_path) """
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-db = SQLAlchemy(app)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-
-    def __repr__(self):
-        return '<User %r>' % self.username
+if __name__ == "__main__":
+    app.debug = True
+    db_helper.db_reset()
+    app.run()
