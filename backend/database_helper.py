@@ -1,8 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from server import app
 
 db = SQLAlchemy(app)
+
+app.config["SECRET_KEY"] = 'Tjelvararlitetokig utropstecken'
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,13 +13,12 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
-    gender = db.Column(db.Enum('MALE', 'FEMALE', 'OTHER'), default='MALE', nullable=False)
+    gender = db.Column(db.String(80), nullable=False)
+    #gender = db.Column(db.Enum('MALE', 'FEMALE', 'OTHER'), default='MALE', nullable=False)
     city = db.Column(db.String(80), nullable=False)
     country = db.Column(db.String(80), nullable=False)
 
     token = db.relationship("Token", backref="user", lazy="dynamic")
-    received_posts = db.relationship("Post", backref="recipient", lazy="dynamic")
-    sent_posts = db.relationship("Post", backref="author", lazy="dynamic")
 
     def generate_auth_token(self, expiration=604800):
 
@@ -42,18 +44,26 @@ class User(db.Model):
         return check_password_hash(self.password, password)
 
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, first_name, last_name, gender, city, country):
         self.email = email
         self.password = generate_password_hash(password)
+        self.first_name = first_name
+        self.last_name = last_name
+        self.gender = gender
+        self.city = city
+        self.country = country
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.email
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text_content = db.Column(db.String)
-    from_user = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=false)
-    to_user = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=false)
+    from_user = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    to_user = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    sender = db.relationship("User", foreign_keys=[from_user], backref='sent')
+    receiver = db.relationship("User", foreign_keys=[to_user], backref='received')
 
 
     def __repr__(self):
@@ -83,7 +93,7 @@ def get_user(email):
 
 def add_user(user):
     user = User(user["email"], user["password"], user["firstname"],
-     user["familyname"], user["gender"], user["city"], user["country"])
+     user["lastname"], user["gender"], user["city"], user["country"])
     db.session.add(user)
     db.session.commit()
 
