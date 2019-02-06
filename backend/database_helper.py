@@ -98,7 +98,6 @@ def add_user(user):
     db.session.commit()
 
 
-
 def db_reset():
     """Clear the database."""
     db.drop_all()

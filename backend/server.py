@@ -9,6 +9,7 @@ app = Flask(__name__)
 db_uri = 'sqlite:///{}'.format(db_path) """
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 @app.route('/')
 def hello_world():
@@ -18,6 +19,7 @@ def hello_world():
 def sign_in():
     user_info = request.form
     user = db_helper.get_user(user_info["email"])
+    return user_info["email"]
     failed_response = jsonify(success=False, status_code="401",
         message="Email or password is not matching")
     if user is None:
