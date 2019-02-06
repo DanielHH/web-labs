@@ -10,6 +10,10 @@ db_uri = 'sqlite:///{}'.format(db_path) """
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
+@app.route('/')
+def hello_world():
+    return 'Hello, World!'
+
 @app.route("/signin", methods=["POST"])
 def sign_in():
     user_info = request.get_json()
@@ -20,8 +24,8 @@ def sign_in():
         return failed_response
     elif user.check_password(user_info["password"]):
         #Perhaps check if user is already logged in (i.e. token already exists)
-        return jsonify("success"=True, "message"="Successfully signed in.",
-            "data"=user.generate_auth_token())
+        return jsonify(success=True, message="Successfully signed in.",
+            data=user.generate_auth_token())
     else:
         return failed_response
 
@@ -35,8 +39,8 @@ def sign_up():
         user["city"] and user["country"]):
             add_user(user)
     else:
-        return jsonify("success"=false, "message"="Form data missing or incorrect type.")
-    return jsonify("success"=true, "message"="Successfully created a new user.")
+        return jsonify(success=False, message="Form data missing or incorrect type.")
+    return jsonify(success=True, message="Successfully created a new user.")
 
 
 @app.route("/signout", methods=["POST"])
