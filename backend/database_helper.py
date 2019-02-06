@@ -15,8 +15,8 @@ class User(db.Model):
     country = db.Column(db.String(80), nullable=False)
 
     token = db.relationship("Token", backref="user", lazy="dynamic")
-    received_posts = db.relationship("Post", backref="recipient", lazy="dynamic")
-    sent_posts = db.relationship("Post", backref="author", lazy="dynamic")
+    """sent_posts = db.relationship("Post", backref="author", lazy="dynamic")
+    received_posts = db.relationship("Post", backref="recipient", lazy="dynamic")"""
 
     def generate_auth_token(self, expiration=604800):
 
@@ -59,6 +59,9 @@ class Post(db.Model):
     text_content = db.Column(db.String)
     from_user = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     to_user = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    sender = db.relationship(User, foreign_keys=[from_user], backref='sent', lazy='dynamic')
+    receiver = db.relationship(User, foreign_keys=[to_user], backref='received', lazy='dynamic')
 
 
     def __repr__(self):
