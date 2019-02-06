@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, json
 from flask_sqlalchemy import SQLAlchemy
 import database_helper as db_helper
 import os.path
@@ -16,7 +16,7 @@ def hello_world():
 
 @app.route("/signin", methods=["POST"])
 def sign_in():
-    user_info = request.get_json()
+    user_info = request.form
     user = db_helper.get_user(user_info["email"])
     failed_response = jsonify(success=False, status_code="401",
         message="Email or password is not matching")
