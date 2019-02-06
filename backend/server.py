@@ -36,7 +36,6 @@ def sign_up():
             add_user(user)
     else:
         return jsonify("success"=false, "message"="Form data missing or incorrect type.")
-    user_id = len(User.query.all()) # What's the point of this line?
     return jsonify("success"=true, "message"="Successfully created a new user.")
 
 
