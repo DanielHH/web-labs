@@ -27,7 +27,7 @@ def sign_in():
 
 
 @app.route("/signup", methods=["POST"])
-def signUp():
+def sign_up():
     user = request.get_json()
     if not db_helper.get_user(user["email"]):
         if (user["email"] and len(user["password"]) >= 8 and
@@ -38,6 +38,36 @@ def signUp():
         return jsonify("success"=false, "message"="Form data missing or incorrect type.")
     user_id = len(User.query.all()) # What's the point of this line?
     return jsonify("success"=true, "message"="Successfully created a new user.")
+
+
+@app.route("/signout", methods=["POST"])
+def sign_out():
+    return
+
+
+@app.route("/changepassword", methods=["POST"])
+def change_password():
+    return
+
+
+@app.route("/getuser", methods=["GET"])
+def get_user_data_by_email():
+    return
+
+
+@app.route("/getmessagesbytoken", methods=["GET"])
+def get_user_messages_by_token():
+    return
+
+
+@app.route("/getmessagesbyemail", methods=["GET"])
+def get_user_messages_by_email():
+    return
+
+
+@app.route("/postmessage", methods=["POST"])
+def post_message():
+    return
 
 
 
