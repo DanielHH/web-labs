@@ -77,6 +77,18 @@ class Token(db.Model):
     def __repr__(self):
         return "<token %r>" % self.token + "<Id: %r>" % self.id
 
+
+def get_user(email):
+    return User.query.filter_by(email=email).first()
+
+def add_user(user):
+    user = User(user["email"], user["password"], user["firstname"],
+     user["familyname"], user["gender"], user["city"], user["country"])
+    db.session.add(user)
+    db.session.commit()
+
+
+
 def db_reset():
     """Clear the database."""
     db.drop_all()

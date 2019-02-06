@@ -13,28 +13,32 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 @app.route("/signin", methods=["POST"])
 def sign_in():
     user_info = request.get_json()
-    try_users = User.query.filter_by(email=user_info["email"]).first()
-    failed_response = jsonify(success=False, status_code="401", message="User or password is not matching")
-    if try_users is None:
+    user = db_helper.get_user(user_info["email"])
+    failed_response = jsonify(success=False, status_code="401",
+        message="Email or password is not matching")
+    if user is None:
         return failed_response
-    elif try_users.check_password(user_info["password"]):
-        return jsonify("success"=True, "message"="Successfully signed in.", "data"=try_users.generate_auth_token())
+    elif user.check_password(user_info["password"]):
+        #Perhaps check if user is already logged in (i.e. token already exists)
+        return jsonify("success"=True, "message"="Successfully signed in.",
+            "data"=user.generate_auth_token())
     else:
         return failed_response
+
 
 @app.route("/signup", methods=["POST"])
 def signUp():
     user = request.get_json()
-    if not User.query.filter_by(email=user["email"]).first():
-        # TODO: CHECK NONEMPTY FIELDS AND PASSWORD >= 8.
-        user = User(user["email"], user["password"], user["firstname"],
-         user["familyname"], user["gender"], user["city"], user["country"])
-        db.session.add(user)
-        db.session.commit()
+    if not db_helper.get_user(user["email"]):
+        if (user["email"] and len(user["password"]) >= 8 and
+        user["firstname"] and user["familyname"] and user["gender"] and
+        user["city"] and user["country"]):
+            add_user(user)
     else:
         return jsonify("success"=false, "message"="Form data missing or incorrect type.")
-    user_id = len(User.query.all())
+    user_id = len(User.query.all()) # What's the point of this line?
     return jsonify("success"=true, "message"="Successfully created a new user.")
+
 
 
 if __name__ == "__main__":
