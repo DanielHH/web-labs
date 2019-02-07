@@ -42,7 +42,7 @@ class User(db.Model):
 
         s = Serializer(app.config["SECRET_KEY"], expires_in=expiration)
         token = s.dumps({"id": self.id})
-        token = Token("Bearer " + token.decode("ascii"), self.id)
+        token = Token(token.decode("ascii"), self.id)
         db.session.add(token)
         db.session.commit()
         token = s.dumps({"id": self.id})
@@ -137,6 +137,10 @@ def token_exists(token):
 
 def get_user_by_email(email):
     return User.query.filter_by(email=email).first()
+
+
+def check_if_user_has_token(user):
+    return Token.query.filter_by(user_id = user.id).first()
 
 
 def db_reset():

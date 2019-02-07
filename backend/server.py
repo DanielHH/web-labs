@@ -1,10 +1,10 @@
-from flask import Flask, request, Response, jsonify, json
+from flask import Flask, request, Response, jsonify, json, g
 from flask_httpauth import HTTPTokenAuth
 from flask_sqlalchemy import SQLAlchemy
 import database_helper as db_helper
 
 app = Flask(__name__)
-auth = HTTPTokenAuth(scheme=" ")
+auth = HTTPTokenAuth(scheme="Bearer")
 db = SQLAlchemy(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -13,11 +13,18 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 unauthorized = 401
 bad_request = 400
 
+
 @auth.verify_token
 def verify_token(token):
     if db_helper.token_exists(token):
+        g.token = token
         return True
     return False
+
+
+@auth.error_handler
+def auth_error():
+    return jsonify(success=False, message="You are not signed in.")
 
 
 @app.route('/')
@@ -28,12 +35,14 @@ def hello_world():
 def sign_in():
     user_info = request.form
     user = db_helper.get_user(user_info["email"])
+    if db_helper.check_if_user_has_token(user):
+        return jsonify(success=False, message="User is already signed in"), bad_request
     failed_response = jsonify(success=False, status_code="401",
         message="Email or password is not matching")
     if user is None:
         return failed_response, unauthorized
     elif user.check_password(user_info["password"]):
-        #Perhaps check if user is already logged in (i.e. token already exists)
+
         return jsonify(success=True, message="Successfully signed in.",
             data=user.generate_auth_token())
     else:
@@ -57,21 +66,15 @@ def sign_up():
 @app.route("/signout", methods=["POST"])
 @auth.login_required
 def sign_out():
-    token = request.args.get("token")
-    if db_helper.remove_token(token):
+    if db_helper.remove_token(g.token):
         return jsonify(success=True, message="Successfully signed out.")
-    else:
-        return jsonify(success=False, message="You are not signed in."), unauthorized
 
 
 @app.route("/changepassword", methods=["POST"])
 @auth.login_required
 def change_password():
     data = request.form
-    print request.headers["Authorization"]
-    user = db_helper.get_user_by_token(request.headers["Authorization"])
-    if not user:
-        return jsonify(success=False, message="You are not signed in."), unauthorized
+    user = db_helper.get_user_by_token(g.token)
     if not len(data["new_password"]) >= 8:
         return jsonify(success=False, message="new password must consist of at least 8 characters"), unauthorized
     if user.change_password(data["password"], data["new_password"]):
@@ -81,22 +84,16 @@ def change_password():
 
 
 @app.route("/getuserbytoken", methods=["POST"])
+@auth.login_required
 def get_user_data_by_token():
-    token = request.args.get("token")
-    user = db_helper.get_user_by_token(token)
-    if not user:
-        return jsonify(success=False, message="You are not signed in."), unauthorized
-    else:
-        return jsonify(success=True, message="HERE YOU GO!", user=user.as_dict())
+    user = db_helper.get_user_by_token(g.token)
+    return jsonify(success=True, message="HERE YOU GO!", user=user.as_dict())
 
 
 @app.route("/getuserbyemail", methods=["POST"])
+@auth.login_required
 def get_user_data_by_email():
     email = request.form["email"]
-    token = request.args.get("token")
-    if not db_helper.token_exists(token):
-        return jsonify(success=False, message="You are not signed in."), unauthorized
-
     user = db_helper.get_user_by_email(email)
     if not user:
         return jsonify(success=False, message="User not found!"), bad_request
@@ -105,21 +102,21 @@ def get_user_data_by_email():
 
 
 @app.route("/getmessagesbytoken", methods=["POST"])
+@auth.login_required
 def get_user_messages_by_token():
-    token = request.args.get("token")
-    if not db_helper.token_exists(token):
-        return jsonify(success=False, message="You are not signed in."), unauthorized
-    user = db_helper.get_user_by_token(token)
+    user = db_helper.get_user_by_token(g.token)
     print user.received
 
     return "hej"
 
 @app.route("/getmessagesbyemail", methods=["POST"])
+@auth.login_required
 def get_user_messages_by_email():
     return
 
 
 @app.route("/postmessage", methods=["POST"])
+@auth.login_required
 def post_message():
     from_data = request.form
     token = request.args.get("token")
