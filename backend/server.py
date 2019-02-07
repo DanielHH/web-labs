@@ -34,10 +34,10 @@ def sign_in():
 
 @app.route("/signup", methods=["POST"])
 def sign_up():
-    user = request.get_json()
+    user = request.form
     if not db_helper.get_user(user["email"]):
         if (user["email"] and len(user["password"]) >= 8 and
-        user["firstname"] and user["familyname"] and user["gender"] and
+        user["firstname"] and user["lastname"] and user["gender"] and
         user["city"] and user["country"]):
             add_user(user)
     else:
