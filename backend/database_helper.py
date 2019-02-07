@@ -63,6 +63,10 @@ class User(db.Model):
             return False
 
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns if c.name != "password" }
+
+
     def __repr__(self):
         return '<User %r>' % self.email
 

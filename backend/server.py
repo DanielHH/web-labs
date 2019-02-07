@@ -59,7 +59,7 @@ def sign_out():
     else:
         return jsonify(success=False, message="You are not signed in."), unauthorized
 
-# TODO: TEST THIS ---v
+
 @app.route("/changepassword", methods=["POST"])
 def change_password():
     data = request.form
@@ -74,9 +74,19 @@ def change_password():
         return jsonify(success=False, message="Wrong password"), unauthorized
 
 
+@app.route("/getuserbytoken", methods=["POST"])
+def get_user_data_by_token():
+    token = request.args.get("token")
+    user = db_helper.get_user_by_token(token)
+    if not user:
+        return jsonify(success=False, message="You are not signed in."), unauthorized
+    else:
+        return jsonify(success=True, message="HERE YOU GO!", user=user.as_dict())
 
-@app.route("/getuser", methods=["GET"])
+
+@app.route("/getuserbyemail", methods=["POST"])
 def get_user_data_by_email():
+
     return
 
 
