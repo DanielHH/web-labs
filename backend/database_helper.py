@@ -95,7 +95,18 @@ def add_user(user):
      user["lastname"], user["gender"], user["city"], user["country"])
     db.session.add(user)
     db.session.commit()
+    return user
 
+def remove_token(token):
+    print token
+    token = Token.query.filter_by(token=token).first()
+    print token
+    if token:
+        db.session.delete(token)
+        db.session.commit()
+        return True
+    else:
+        return False
 
 def db_reset():
     """Clear the database."""

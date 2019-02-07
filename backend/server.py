@@ -13,6 +13,9 @@ db_uri = 'sqlite:///{}'.format(db_path) """
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
+unauthorized = 401
+bad_request = 400
+
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
@@ -24,31 +27,39 @@ def sign_in():
     failed_response = jsonify(success=False, status_code="401",
         message="Email or password is not matching")
     if user is None:
-        return failed_response
+        return failed_response, unauthorized
     elif user.check_password(user_info["password"]):
         #Perhaps check if user is already logged in (i.e. token already exists)
         return jsonify(success=True, message="Successfully signed in.",
             data=user.generate_auth_token())
     else:
-        return failed_response
+        return failed_response, unauthorized
 
 
 @app.route("/signup", methods=["POST"])
 def sign_up():
-    user = request.form
-    if not db_helper.get_user(user["email"]):
-        if (user["email"] and len(user["password"]) >= 8 and
-        user["firstname"] and user["lastname"] and user["gender"] and
-        user["city"] and user["country"]):
-            db_helper.add_user(user)
+    user_info = request.form
+    if not db_helper.get_user(user_info["email"]):
+        if (user_info["email"] and len(user_info["password"]) >= 8 and
+        user_info["firstname"] and user_info["lastname"] and user_info["gender"] and
+        user_info["city"] and user_info["country"]):
+            user = db_helper.add_user(user_info)
+            return jsonify(success=True, message="Successfully created a new user.", data=user.generate_auth_token())
+        else:
+            return jsonify(success=False, message="Form data missing or incorrect type."), bad_request
     else:
-        return jsonify(success=False, message="Form data missing or incorrect type.")
-    return jsonify(success=True, message="Successfully created a new user.")
+        return jsonify(success=False, message="User already exists"), bad_request
+
 
 
 @app.route("/signout", methods=["POST"])
 def sign_out():
-    return
+    token = request.args.get("token")
+    print token
+    if db_helper.remove_token(token):
+        return jsonify(success=True, message="Successfully signed out.")
+    else:
+        return jsonify(success=False, message="You are not signed in."), unauthorized
 
 
 @app.route("/changepassword", methods=["POST"])
