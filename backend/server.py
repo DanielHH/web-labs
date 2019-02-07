@@ -98,21 +98,27 @@ def get_user_data_by_email():
     if not user:
         return jsonify(success=False, message="User not found!"), bad_request
     else:
-        return jsonify(success=True, message="HERE YOU GO!", user=user.as_dict())
+        return jsonify(success=True, message="User data retrieved.", user=user.as_dict())
 
 
 @app.route("/getmessagesbytoken", methods=["POST"])
 @auth.login_required
 def get_user_messages_by_token():
     user = db_helper.get_user_by_token(g.token)
-    print user.received
-
-    return "hej"
+    messages = []
+    for post in user.received:
+        messages.append(post.message)
+    return jsonify(success=True, message="User messages retrieved.", messages=messages)
 
 @app.route("/getmessagesbyemail", methods=["POST"])
 @auth.login_required
 def get_user_messages_by_email():
-    return
+    email = request.form["email"]
+    user = db_helper.get_user_by_email(email)
+    messages = []
+    for post in user.received:
+        messages.append(post.message)
+    return jsonify(success=True, message="User messages retrieved.", messages=messages)
 
 
 @app.route("/postmessage", methods=["POST"])
