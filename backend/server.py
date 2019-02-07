@@ -86,8 +86,16 @@ def get_user_data_by_token():
 
 @app.route("/getuserbyemail", methods=["POST"])
 def get_user_data_by_email():
+    email = request.form["email"]
+    token = request.args.get("token")
+    if not db_helper.token_exists(token):
+        return jsonify(success=False, message="You are not signed in."), unauthorized
 
-    return
+    user = db_helper.get_user_by_email(email)
+    if not user:
+        return jsonify(success=False, message="User not found!"), bad_request
+    else:
+        return jsonify(success=True, message="HERE YOU GO!", user=user.as_dict())
 
 
 @app.route("/getmessagesbytoken", methods=["GET"])

@@ -107,12 +107,14 @@ class Token(db.Model):
 def get_user(email):
     return User.query.filter_by(email=email).first()
 
+
 def add_user(user):
     user = User(user["email"], user["password"], user["firstname"],
      user["lastname"], user["gender"], user["city"], user["country"])
     db.session.add(user)
     db.session.commit()
     return user
+
 
 def remove_token(token):
     token = Token.query.filter_by(token=token).first()
@@ -123,9 +125,19 @@ def remove_token(token):
     else:
         return False
 
+
 def get_user_by_token(token):
     token = Token.query.filter_by(token=token).first()
     return token.user
+
+
+def token_exists(token):
+    return Token.query.filter_by(token=token).first()
+
+
+def get_user_by_email(email):
+    return User.query.filter_by(email=email).first()
+
 
 def db_reset():
     """Clear the database."""
