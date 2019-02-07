@@ -3,7 +3,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from server import app, db
 
-
 app.config["SECRET_KEY"] = 'Tjelvararlitetokig utropstecken'
 
 class User(db.Model):
@@ -18,6 +17,7 @@ class User(db.Model):
     country = db.Column(db.String(80), nullable=False)
 
     token = db.relationship("Token", backref="user", lazy="dynamic")
+
 
     def __init__(self, email, password, first_name, last_name, gender, city, country):
         self.email = email
@@ -69,6 +69,7 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.email
 
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String)
@@ -77,6 +78,7 @@ class Post(db.Model):
 
     sender = db.relationship("User", foreign_keys=[from_user], backref='sent')
     receiver = db.relationship("User", foreign_keys=[to_user], backref='received')
+
 
     def __init__(self, message, from_user, to_user):
         self.message = message
@@ -92,6 +94,7 @@ class Token(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     token = db.Column(db.String, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+
 
     def __init__(self, token, user_id):
         self.token = token
@@ -155,6 +158,5 @@ def save_to_db(entry):
 
 
 def db_reset():
-    """Clear the database."""
     db.drop_all()
     db.create_all()

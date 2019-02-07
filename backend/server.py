@@ -31,6 +31,7 @@ def auth_error():
 def hello_world():
     return 'Hello, World!'
 
+
 @app.route("/signin", methods=["POST"])
 def sign_in():
     user_info = request.form
@@ -109,6 +110,7 @@ def get_user_messages_by_token():
     for post in user.received:
         messages.append(post.message)
     return jsonify(success=True, message="User messages retrieved.", messages=messages)
+
 
 @app.route("/getmessagesbyemail", methods=["POST"])
 @auth.login_required
