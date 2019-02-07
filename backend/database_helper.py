@@ -19,6 +19,16 @@ class User(db.Model):
 
     token = db.relationship("Token", backref="user", lazy="dynamic")
 
+    def __init__(self, email, password, first_name, last_name, gender, city, country):
+        self.email = email
+        self.password = generate_password_hash(password)
+        self.first_name = first_name
+        self.last_name = last_name
+        self.gender = gender
+        self.city = city
+        self.country = country
+
+
     def generate_auth_token(self, expiration=604800):
 
         """
@@ -39,18 +49,19 @@ class User(db.Model):
         token = token.decode("ascii")
         return token
 
+
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
 
-    def __init__(self, email, password, first_name, last_name, gender, city, country):
-        self.email = email
-        self.password = generate_password_hash(password)
-        self.first_name = first_name
-        self.last_name = last_name
-        self.gender = gender
-        self.city = city
-        self.country = country
+    def change_password(self, password, new_password):
+        if self.check_password(password):
+            self.password = generate_password_hash(new_password)
+            db.session.commit()
+            return True
+        else:
+            return False
+
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -80,8 +91,10 @@ class Token(db.Model):
         self.token = token
         self.user_id = user_id
 
+
     def get_token(self):
         return self.token
+
 
     def __repr__(self):
         return "<token %r>" % self.token + "<Id: %r>" % self.id
@@ -98,15 +111,17 @@ def add_user(user):
     return user
 
 def remove_token(token):
-    print token
     token = Token.query.filter_by(token=token).first()
-    print token
     if token:
         db.session.delete(token)
         db.session.commit()
         return True
     else:
         return False
+
+def get_user_by_token(token):
+    token = Token.query.filter_by(token=token).first()
+    return token.user
 
 def db_reset():
     """Clear the database."""

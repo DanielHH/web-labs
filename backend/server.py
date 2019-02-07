@@ -39,17 +39,15 @@ def sign_in():
 @app.route("/signup", methods=["POST"])
 def sign_up():
     user_info = request.form
-    if not db_helper.get_user(user_info["email"]):
-        if (user_info["email"] and len(user_info["password"]) >= 8 and
-        user_info["firstname"] and user_info["lastname"] and user_info["gender"] and
-        user_info["city"] and user_info["country"]):
-            user = db_helper.add_user(user_info)
-            return jsonify(success=True, message="Successfully created a new user.", data=user.generate_auth_token())
-        else:
-            return jsonify(success=False, message="Form data missing or incorrect type."), bad_request
-    else:
+    if db_helper.get_user(user_info["email"]):
         return jsonify(success=False, message="User already exists"), bad_request
-
+    if (user_info["email"] and len(user_info["password"]) >= 8 and
+    user_info["firstname"] and user_info["lastname"] and user_info["gender"] and
+    user_info["city"] and user_info["country"]):
+        user = db_helper.add_user(user_info)
+        return jsonify(success=True, message="Successfully created a new user.", data=user.generate_auth_token())
+    else:
+        return jsonify(success=False, message="Form data missing or incorrect type."), bad_request
 
 
 @app.route("/signout", methods=["POST"])
@@ -61,10 +59,20 @@ def sign_out():
     else:
         return jsonify(success=False, message="You are not signed in."), unauthorized
 
-
+# TODO: TEST THIS ---v
 @app.route("/changepassword", methods=["POST"])
 def change_password():
-    return
+    data = request.form
+    user = db_helper.get_user_by_token(data["token"])
+    if not user:
+        return jsonify(success=False, message="You are not signed in."), unauthorized
+    if not len(data["new_password"]) >= 8:
+        return jsonify(success=False, message="new password must consist of at least 8 characters"), unauthorized
+    if user.change_password(data["password"], data["new_password"]):
+        return jsonify(success=True, message="Password changed.")
+    else:
+        return jsonify(success=False, message="Wrong password"), unauthorized
+
 
 
 @app.route("/getuser", methods=["GET"])
@@ -85,7 +93,6 @@ def get_user_messages_by_email():
 @app.route("/postmessage", methods=["POST"])
 def post_message():
     return
-
 
 
 if __name__ == "__main__":
