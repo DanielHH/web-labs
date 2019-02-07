@@ -5,6 +5,8 @@ import os.path
 
 app = Flask(__name__)
 
+db = SQLAlchemy(app)
+
 """db_path = os.path.join(os.path.dirname(__file__), 'database.db')
 db_uri = 'sqlite:///{}'.format(db_path) """
 
@@ -19,7 +21,6 @@ def hello_world():
 def sign_in():
     user_info = request.form
     user = db_helper.get_user(user_info["email"])
-    return user_info["email"]
     failed_response = jsonify(success=False, status_code="401",
         message="Email or password is not matching")
     if user is None:
@@ -39,7 +40,7 @@ def sign_up():
         if (user["email"] and len(user["password"]) >= 8 and
         user["firstname"] and user["lastname"] and user["gender"] and
         user["city"] and user["country"]):
-            add_user(user)
+            db_helper.add_user(user)
     else:
         return jsonify(success=False, message="Form data missing or incorrect type.")
     return jsonify(success=True, message="Successfully created a new user.")
@@ -78,5 +79,5 @@ def post_message():
 
 if __name__ == "__main__":
     app.debug = True
-    db_helper.db_reset()
     app.run()
+    db_helper.db_reset(db)

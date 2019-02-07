@@ -1,9 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from server import app
+from server import app, db
 
-db = SQLAlchemy(app)
 
 app.config["SECRET_KEY"] = 'Tjelvararlitetokig utropstecken'
 
