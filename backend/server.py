@@ -118,12 +118,17 @@ def get_user_messages_by_email():
 @app.route("/postmessage", methods=["POST"])
 @auth.login_required
 def post_message():
-    from_data = request.form
-    token = request.args.get("token")
-    return
+    message = request.form["message"]
+    to_email = request.args.get("to_email")
+    to_user = db_helper.get_user_by_email(to_email)
+    if not to_user:
+        return jsonify(success=False, message="User not found!"), bad_request
+    from_user = db_helper.get_user_by_token(g.token)
+    db_helper.create_post(message, from_user, to_user)
+    return jsonify(success=True, message="Message posted")
 
 
 if __name__ == "__main__":
     app.debug = True
     app.run()
-    db_helper.db_reset(db)
+    db_helper.db_reset()

@@ -43,8 +43,7 @@ class User(db.Model):
         s = Serializer(app.config["SECRET_KEY"], expires_in=expiration)
         token = s.dumps({"id": self.id})
         token = Token(token.decode("ascii"), self.id)
-        db.session.add(token)
-        db.session.commit()
+        save_to_db(token)
         token = s.dumps({"id": self.id})
         token = token.decode("ascii")
         return token
@@ -72,21 +71,24 @@ class User(db.Model):
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    text_content = db.Column(db.String)
+    message = db.Column(db.String)
     from_user = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     to_user = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
     sender = db.relationship("User", foreign_keys=[from_user], backref='sent')
     receiver = db.relationship("User", foreign_keys=[to_user], backref='received')
 
+    def __init__(self, message, from_user, to_user):
+        self.message = message
+        self.from_user = from_user
+        self.to_user = to_user
+
 
     def __repr__(self):
-        return "<text_content %r>" % self.text_content
+        return "<message %r>" % self.message
+
 
 class Token(db.Model):
-
-    """Class representing Tokens generated when logging in"""
-
     id = db.Column(db.Integer, primary_key=True)
     token = db.Column(db.String, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -111,16 +113,14 @@ def get_user(email):
 def add_user(user):
     user = User(user["email"], user["password"], user["firstname"],
      user["lastname"], user["gender"], user["city"], user["country"])
-    db.session.add(user)
-    db.session.commit()
+    save_to_db(user)
     return user
 
 
 def remove_token(token):
     token = Token.query.filter_by(token=token).first()
     if token:
-        db.session.delete(token)
-        db.session.commit()
+        save_to_db(token)
         return True
     else:
         return False
@@ -141,6 +141,17 @@ def get_user_by_email(email):
 
 def check_if_user_has_token(user):
     return Token.query.filter_by(user_id = user.id).first()
+
+
+def create_post(message, from_user, to_user):
+    post = Post(message, from_user.id, to_user.id)
+    save_to_db(post)
+    return post
+
+
+def save_to_db(entry):
+    db.session.add(entry)
+    db.session.commit()
 
 
 def db_reset():
