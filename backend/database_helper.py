@@ -42,7 +42,7 @@ class User(db.Model):
 
         s = Serializer(app.config["SECRET_KEY"], expires_in=expiration)
         token = s.dumps({"id": self.id})
-        token = Token(token.decode("ascii"), self.id)
+        token = Token("Bearer " + token.decode("ascii"), self.id)
         db.session.add(token)
         db.session.commit()
         token = s.dumps({"id": self.id})
@@ -128,7 +128,7 @@ def remove_token(token):
 
 def get_user_by_token(token):
     token = Token.query.filter_by(token=token).first()
-    return token.user
+    return token.user #Q: is this an extra query????
 
 
 def token_exists(token):
