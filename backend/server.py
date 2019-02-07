@@ -9,6 +9,7 @@ db = SQLAlchemy(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
+app.config["SECRET_KEY"] = 'Tjelvararlitetokig utropstecken'
 
 unauthorized = 401
 bad_request = 400
