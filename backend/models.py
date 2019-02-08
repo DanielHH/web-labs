@@ -9,7 +9,6 @@ class User(db.Model):
     first_name = db.Column(db.String(80), nullable=False)
     last_name = db.Column(db.String(80), nullable=False)
     gender = db.Column(db.String(80), nullable=False)
-    #gender = db.Column(db.Enum('MALE', 'FEMALE', 'OTHER'), default='MALE', nullable=False)
     city = db.Column(db.String(80), nullable=False)
     country = db.Column(db.String(80), nullable=False)
 

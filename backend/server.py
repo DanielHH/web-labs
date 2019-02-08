@@ -44,7 +44,6 @@ def sign_in():
     if user is None:
         return failed_response, unauthorized
     elif user.check_password(user_info["password"]):
-
         return jsonify(success=True, message="Successfully signed in.",
             data=user.generate_auth_token())
     else:
@@ -89,7 +88,7 @@ def change_password():
 @auth.login_required
 def get_user_data_by_token():
     user = db_helper.get_user_by_token(g.token)
-    return jsonify(success=True, message="HERE YOU GO!", user=user.as_dict())
+    return jsonify(success=True, message="User data retrieved.", user=user.as_dict())
 
 
 @app.route("/getuserbyemail", methods=["POST"])
