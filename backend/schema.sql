@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS user (
+  email VARCHAR(60) PRIMARY KEY,
+  password_hash VARCHAR(128) NOT NULL,
+  salt VARCHAR(32) NOT NULL,
+  first_name VARCHAR(60) NOT NULL,
+  family_name VARCHAR(60) NOT NULL,
+  gender VARCHAR(10) NOT NULL,
+  city VARCHAR(60) NOT NULL,
+  country VARCHAR(60) NOT NULL,
+  private_key VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS post (
+  id INTEGER PRIMARY KEY,
+  'from' VARCHAR(60) NOT NULL,
+  'to' VARCHAR(60) NOT NULL,
+  content VARCHAR(240),
+
+  FOREIGN KEY ('from') REFERENCES user(email),
+  FOREIGN KEY ('to') REFERENCES user(email)
+);
+
+CREATE TABLE IF NOT EXISTS session (
+  token VARCHAR(128) PRIMARY KEY,
+  user VARCHAR(60) UNIQUE NOT NULL,
+
+  FOREIGN KEY ('user') REFERENCES user(email)
+);
