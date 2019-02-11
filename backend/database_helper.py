@@ -15,7 +15,8 @@ def add_user(user):
 def remove_token(token):
     token = Token.query.filter_by(token=token).first()
     if token:
-        save_to_db(token)
+        db.session.delete(token)
+        db.session.commit()
         return True
     else:
         return False
