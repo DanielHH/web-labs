@@ -3,7 +3,7 @@ function displayView(view){
 };
 
 window.onload = function(){
-  if (localStorage.getItem("user_token") != "") {
+  if (localStorage.getItem("user_token") != null) {
     displayView("profile_view");
     document.getElementById("defaultOpen").click();
     fill_person_info();
