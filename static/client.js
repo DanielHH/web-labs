@@ -80,12 +80,24 @@ function signUp(){
 }
 
 function signIn(email = "", password = ""){
+  var xmlhttp = new XMLHttpRequest();
   if (email == "") {
     var form = document.getElementById("login_form");
     var jsonObj = getFormData(form);
-    var response = serverstub.signIn(jsonObj.email_login, jsonObj.password);
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var response = JSON.parse(this.responseText)
+          if (!response.success){
+            document.getElementById("login_error").innerHTML = response.message;
+            return false;
+          } else {
+            localStorage.setItem("user_token", response.data);
+          }
+      };
+      xmlhttp.open("POST", "http://localhost:5000/signup", true);
+      xmlhttp.send(JSON.stringify({"email": jsonObj.email_login, "password": jsonObj.password}));
+    }
   } else {
-    var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
           var response = JSON.parse(this.responseText)
@@ -196,9 +208,24 @@ function searchUser() {
 function signOut() {
   var token = localStorage.getItem("user_token");
   var response = serverstub.signOut(token);
-  if (response.success) {
-    sessionStorage.setItem("searched_user", null);
-    localStorage.setItem("user_token", "");
-    displayView("welcome_view");
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText)
+        if (response.success) {
+          sessionStorage.setItem("searched_user", null);
+          localStorage.setItem("user_token", "");
+          displayView("welcome_view");
+        }
+    };
+    sendXHR(xmlhttp, "POST", "http://localhost:5000/signout")
   }
+}
+
+function sendXHR(req, method, url, data = null, needAuth = true, asych = true) {
+  if (needAuth) {
+    req.setRequestHeader('Authorization', 'Bearer ' + g.token );
+  }
+  req.open(method, url, asych);
+  req.send(data);
 }
