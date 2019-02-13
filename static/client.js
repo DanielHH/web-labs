@@ -62,15 +62,15 @@ function signUp(){
   var form = document.getElementById("signup_form");
   var jsonObj = getFormData(form);
   var email = document.getElementById("email");
-
+  console.log("(signUp) jsonObj: " + jsonObj.email);
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
-      console.log(this.responseText);
       var response = JSON.parse(this.responseText);
       if (response.success == false) {
         email.setCustomValidity(response.message); // Q Error doesn't show initially why?
       } else {
+        console.log("(signup) response: " + response.message)
         signIn(jsonObj.email, jsonObj.password);
         fill_person_info();
         displayView("profile_view");
@@ -84,36 +84,25 @@ function signUp(){
 
 function signIn(email = "", password = ""){
   var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText)
+        if (!response.success){
+          document.getElementById("login_error").innerHTML = response.message;
+          return false;
+        } else {
+          localStorage.setItem("user_token", response.data);
+        }
+    };
+  }
   if (email == "") {
     var form = document.getElementById("login_form");
     var jsonObj = getFormData(form);
-    xmlhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-          var response = JSON.parse(this.responseText)
-          if (!response.success){
-            document.getElementById("login_error").innerHTML = response.message;
-            return false;
-          } else {
-            localStorage.setItem("user_token", response.data);
-          }
-      };
       sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
-      {"email": jsonObj.email_login, "password": jsonObj.password}, false)
-    }
+      {"email": jsonObj.email_login, "password": jsonObj.password}, false, false);
   } else {
-    xmlhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-          var response = JSON.parse(this.responseText)
-          if (!response.success){
-            document.getElementById("login_error").innerHTML = response.message;
-            return false;
-          } else {
-            localStorage.setItem("user_token", response.data);
-          }
-      };
       sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
-      {"email": email, "password": password}, false)
-    }
+      {"email": email, "password": password}, false, false);
   }
 }
 
@@ -244,10 +233,11 @@ function signOut() {
 }
 
 function sendXHR(req, method, url, data = null, needAuth = true, asych = true) {
+  req.open(method, url, asych);
   if (needAuth) {
     var token = localStorage.getItem("user_token");
+    console.log("sendXHR token: " + token)
     req.setRequestHeader('Authorization', 'Bearer ' + token); // MAYBE REMOVE 'BEARER' CUZ SAVE IT LIKE THAT ALREADY
   }
-  req.open(method, url, asych);
   req.send(JSON.stringify(data));
 }

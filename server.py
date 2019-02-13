@@ -19,6 +19,7 @@ bad_request = 400
 
 @auth.verify_token
 def verify_token(token):
+    print("Token in header: " + token)
     if db_helper.token_exists(token):
         g.token = token
         return True
@@ -40,12 +41,14 @@ def sign_in():
     user_info = json.loads(request.data)
     user = db_helper.get_user(user_info["email"])
     if db_helper.check_if_user_has_token(user):
+        print("(sign_ in) Return bad request")
         return jsonify(success=False, message="User is already signed in"), bad_request
     failed_response = jsonify(success=False, status_code="401",
         message="Email or password is not matching")
     if user is None:
         return failed_response, unauthorized
     elif user.check_password(user_info["password"]):
+        print("(sign_in) Successful signin")
         return jsonify(success=True, message="Successfully signed in.",
             data=user.generate_auth_token())
     else:
@@ -64,7 +67,7 @@ def sign_up():
     user_info["firstname"] and user_info["lastname"] and user_info["gender"] and
     user_info["city"] and user_info["country"]):
         user = db_helper.add_user(user_info)
-        return jsonify(success=True, message="Successfully created a new user.", data=user.generate_auth_token())
+        return jsonify(success=True, message="Successfully created a new user.")
     else:
         return jsonify(success=False, message="Form data missing or incorrect type."), bad_request
 
