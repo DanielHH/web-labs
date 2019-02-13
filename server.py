@@ -1,9 +1,11 @@
 from flask import Flask, request, Response, jsonify, json, g
 from flask_httpauth import HTTPTokenAuth
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 import database_helper as db_helper
 
 app = Flask(__name__)
+cors = CORS(app)
 auth = HTTPTokenAuth(scheme="Bearer")
 db = SQLAlchemy(app)
 
@@ -28,7 +30,8 @@ def auth_error():
     return jsonify(success=False, message="You are not signed in.")
 
 
-@app.route('/')
+@app.route('/',methods=["GET"])
+
 def hello_world():
     return 'Hello, World!'
 

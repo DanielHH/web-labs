@@ -3,14 +3,22 @@ function displayView(view){
 };
 
 window.onload = function(){
-  if (localStorage.getItem("user_token") != null) {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+      console.log(this.responseText);
+    }
+  };
+  xmlhttp.open("GET", "http://localhost:5000/", true);
+  xmlhttp.send();
+  /*if (localStorage.getItem("user_token") != null) {
     displayView("profile_view");
     document.getElementById("defaultOpen").click();
     fill_person_info();
     getPosts();
   } else {
     displayView("welcome_view");
-  }
+  }*/
 }
 
 function fill_person_info(email="") {
