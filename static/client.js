@@ -3,22 +3,14 @@ function displayView(view){
 };
 
 window.onload = function(){
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-  if (this.readyState == 4 && this.status == 200) {
-      console.log(this.responseText);
-    }
-  };
-  xmlhttp.open("GET", "http://localhost:5000/", true);
-  xmlhttp.send();
-  /*if (localStorage.getItem("user_token") != null) {
+  if (localStorage.getItem("user_token") != null) {
     displayView("profile_view");
     document.getElementById("defaultOpen").click();
     fill_person_info();
     getPosts();
   } else {
     displayView("welcome_view");
-  }*/
+  }
 }
 
 function fill_person_info(email="") {
@@ -64,16 +56,26 @@ function clearValidation(element){
 function signUp(){
   var form = document.getElementById("signup_form");
   var jsonObj = getFormData(form);
-  var response = serverstub.signUp(jsonObj);
   var email = document.getElementById("email");
 
-  if (response.success == false) {
-    email.setCustomValidity(response.message); // Error doesn't show initially why?
-  } else {
-    signIn(jsonObj.email, jsonObj.password);
-    fill_person_info();
-    displayView("profile_view");
-  }
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+      console.log(this.responseText);
+      var response = JSON.parse(this.responseText);
+      if (response.success == false) {
+        email.setCustomValidity(response.message); // Error doesn't show initially why?
+      } else {
+        signIn(jsonObj.email, jsonObj.password);
+        fill_person_info();
+        displayView("profile_view");
+      }
+    }
+  };
+  xmlhttp.open("POST", "http://localhost:5000/signup", true);
+  xmlhttp.send(JSON.stringify(jsonObj));
+
+
   return false;
 }
 
@@ -83,14 +85,20 @@ function signIn(email = "", password = ""){
     var jsonObj = getFormData(form);
     var response = serverstub.signIn(jsonObj.email_login, jsonObj.password);
   } else {
-    var response = serverstub.signIn(email, password);
-  }
-
-  if (!response.success){
-    document.getElementById("login_error").innerHTML = response.message;
-    return false;
-  } else {
-    localStorage.setItem("user_token", response.data);
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          var response = JSON.parse(this.responseText)
+          if (!response.success){
+            document.getElementById("login_error").innerHTML = response.message;
+            return false;
+          } else {
+            localStorage.setItem("user_token", response.data);
+          }
+      };
+      xmlhttp.open("POST", "http://localhost:5000/signup", true);
+      xmlhttp.send(JSON.stringify({"email": email, "password": password}));
+    }
   }
 }
 

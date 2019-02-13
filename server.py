@@ -31,14 +31,13 @@ def auth_error():
 
 
 @app.route('/',methods=["GET"])
-
 def hello_world():
     return 'Hello, World!'
 
 
 @app.route("/signin", methods=["POST"])
 def sign_in():
-    user_info = request.form
+    user_info = json.loads(request.data)
     user = db_helper.get_user(user_info["email"])
     if db_helper.check_if_user_has_token(user):
         return jsonify(success=False, message="User is already signed in"), bad_request
@@ -55,9 +54,12 @@ def sign_in():
 
 @app.route("/signup", methods=["POST"])
 def sign_up():
-    user_info = request.form
+    user_info = json.loads(request.data)
+
     if db_helper.get_user(user_info["email"]):
-        return jsonify(success=False, message="User already exists"), bad_request
+        response = jsonify(success=False, message="User already exists")
+        response.status_code = bad_request
+        return response
     if (user_info["email"] and len(user_info["password"]) >= 8 and
     user_info["firstname"] and user_info["lastname"] and user_info["gender"] and
     user_info["city"] and user_info["country"]):
