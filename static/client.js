@@ -14,23 +14,28 @@ window.onload = function(){
 }
 
 function fill_person_info(email="") {
-  if (email =="") {
-      var response = serverstub.getUserDataByToken(localStorage.getItem("user_token"));
-  } else {
-      var response = serverstub.getUserDataByEmail(localStorage.getItem("user_token"),email);
-  }
-  if (response.success) {
-    for (key in response.data) {
-      if (email=="") {
-        document.getElementById(key).innerHTML = response.data[key];
-      } else {
-        document.getElementById("b_" + key).innerHTML = response.data[key];
-      }
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText);
+        if (response.success) {
+          for (key in response.user) {
+            if (email=="") {
+              document.getElementById(key).innerHTML = response.user[key];
+            } else {
+              document.getElementById("b_" + key).innerHTML = response.user[key];
+            }
+          }
+        } else {
+          return response.message;
+        }
     }
+  };
+  if (email == "") {
+      sendXHR(xmlhttp, "POST", "http://localhost:5000/getuserbytoken")
   } else {
-    return response.message;
+      sendXHR(xmlhttp, "POST", "http://localhost:5000/getuserbyemail", {"email": email})
   }
-
 }
 
 function checkLength(password) {
@@ -72,9 +77,7 @@ function signUp(){
       }
     }
   };
-  xmlhttp.open("POST", "http://localhost:5000/signup", true);
-  xmlhttp.send(JSON.stringify(jsonObj));
-
+  sendXHR(xmlhttp, "POST", "http://localhost:5000/signup", jsonObj, false)
 
   return false;
 }
@@ -94,8 +97,8 @@ function signIn(email = "", password = ""){
             localStorage.setItem("user_token", response.data);
           }
       };
-      xmlhttp.open("POST", "http://localhost:5000/signup", true);
-      xmlhttp.send(JSON.stringify({"email": jsonObj.email_login, "password": jsonObj.password}));
+      sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
+      {"email": jsonObj.email_login, "password": jsonObj.password}, false)
     }
   } else {
     xmlhttp.onreadystatechange = function() {
@@ -108,8 +111,8 @@ function signIn(email = "", password = ""){
             localStorage.setItem("user_token", response.data);
           }
       };
-      xmlhttp.open("POST", "http://localhost:5000/signup", true);
-      xmlhttp.send(JSON.stringify({"email": email, "password": password}));
+      sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
+      {"email": email, "password": password}, false)
     }
   }
 }
