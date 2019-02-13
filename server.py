@@ -79,7 +79,7 @@ def sign_out():
 @app.route("/changepassword", methods=["POST"])
 @auth.login_required
 def change_password():
-    data = request.form
+    data = json.loads(request.data)
     user = db_helper.get_user_by_token(g.token)
     if not len(data["new_password"]) >= 8:
         return jsonify(success=False, message="new password must consist of at least 8 characters"), unauthorized
@@ -120,7 +120,7 @@ def get_user_messages_by_token():
 @app.route("/getmessagesbyemail", methods=["POST"])
 @auth.login_required
 def get_user_messages_by_email():
-    email = request.form["email"]
+    email = json.loads(request.data)["email"]
     user = db_helper.get_user_by_email(email)
     messages = []
     for post in user.received:
@@ -131,8 +131,9 @@ def get_user_messages_by_email():
 @app.route("/postmessage", methods=["POST"])
 @auth.login_required
 def post_message():
-    message = request.form["message"]
-    to_email = request.args.get("to_email")
+    request_data = json.loads(request.data);
+    message = request_data["message"]
+    to_email = request_data("to_email")
     to_user = db_helper.get_user_by_email(to_email)
     if not to_user:
         return jsonify(success=False, message="User not found!"), bad_request

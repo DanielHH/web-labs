@@ -140,17 +140,24 @@ function openPage(pageName, elmnt, color) {
 function changePassword() {
   var form = document.getElementById("change_psw_form");
   var jsonObj = getFormData(form);
-  var response = serverstub.changePassword(localStorage.getItem("user_token"), jsonObj.old_password, jsonObj.new_password);
-  var statusText = document.getElementById("change_psw_status");
-  statusText.innerHTML = response.message;
-  if (response.success) {
-    var elements = document.getElementsByTagName("input");
-    for (var i=0; i < elements.length; i++) {
-      if (elements[i].type == "password") {
-        elements[i].value = "";
-      }
-    }
+
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText)
+        var statusText = document.getElementById("change_psw_status");
+        statusText.innerHTML = response.message;
+        if (response.success) {
+          var elements = document.getElementsByTagName("input");
+          for (var i=0; i < elements.length; i++) {
+            if (elements[i].type == "password") {
+              elements[i].value = "";
+            }
+          }
+        }
+    };
   }
+  sendXHR(xmlhttp, "POST", "http://localhost:5000/changepassword", null)
   return false;
 }
 
@@ -160,34 +167,47 @@ function postMessage(email = null) {
     form = document.getElementById("b_post_form");
   }
   var message = getFormData(form);
-  var response = serverstub.postMessage(localStorage.getItem("user_token"), message.message, email);
-  if (response.success) {
-      getPosts(email);
-      form.reset();
+  message.to_email = getUserDataByToken().email // MAYBE WITH SQUARE BRACKETS
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText)
+        if (response.success) {
+            getPosts(email);
+            form.reset();
+        }
+    };
   }
-  return false;
+  sendXHR(xmlhttp, "POST", "http://localhost:5000/postmessage", message)
+  return false; // MAYBE REMOVE THIS BUT THEN WE IN TROUBLE YO
 }
 
 function getPosts(email = null) {
   var feed = document.getElementById("feed");
   var response;
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText)
+        if (response.success) {
+          for (i = 0; i < response.data.length; i++) {
+            var node = document.createElement("div");
+            var textnode = document.createTextNode(response.data[i].content);
+            node.appendChild(textnode);
+            feed.appendChild(node);
+          }
+        }
+    };
+  }
   if (email == null) {
-    response = serverstub.getUserMessagesByToken(localStorage.getItem("user_token"));
+    // MAYBE MOVE OUT feed.innerHTML = "";. WE SHALL SEE
+    feed.innerHTML = "";
+    sendXHR(xmlhttp, "POST", "http://localhost:5000/getmessagesbytoken")
   } else {
     feed = document.getElementById("b_feed");
-    response = serverstub.getUserMessagesByEmail(localStorage.getItem("user_token"), email);
+    feed.innerHTML = "";
+    sendXHR(xmlhttp, "POST", "http://localhost:5000/getmessagesbyemail")
   }
-  feed.innerHTML = "";
-
-  if (response.success) {
-    for (i = 0; i < response.data.length; i++) {
-      var node = document.createElement("div");
-      var textnode = document.createTextNode(response.data[i].content);
-      node.appendChild(textnode);
-      feed.appendChild(node);
-    }
-  }
-
 }
 
 function searchUser() {
@@ -206,8 +226,6 @@ function searchUser() {
 }
 
 function signOut() {
-  var token = localStorage.getItem("user_token");
-  var response = serverstub.signOut(token);
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -218,14 +236,15 @@ function signOut() {
           displayView("welcome_view");
         }
     };
-    sendXHR(xmlhttp, "POST", "http://localhost:5000/signout")
   }
+  sendXHR(xmlhttp, "POST", "http://localhost:5000/signout");
 }
 
 function sendXHR(req, method, url, data = null, needAuth = true, asych = true) {
   if (needAuth) {
-    req.setRequestHeader('Authorization', 'Bearer ' + g.token );
+    var token = localStorage.getItem("user_token");
+    req.setRequestHeader('Authorization', 'Bearer ' + token); // MAYBE REMOVE 'BEARER' CUZ SAVE IT LIKE THAT ALREADY
   }
   req.open(method, url, asych);
-  req.send(data);
+  req.send(JSON.stringify(data));
 }
