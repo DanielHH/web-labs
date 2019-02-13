@@ -64,7 +64,7 @@ function signUp(){
       console.log(this.responseText);
       var response = JSON.parse(this.responseText);
       if (response.success == false) {
-        email.setCustomValidity(response.message); // Error doesn't show initially why?
+        email.setCustomValidity(response.message); // Q Error doesn't show initially why?
       } else {
         signIn(jsonObj.email, jsonObj.password);
         fill_person_info();
