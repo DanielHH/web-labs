@@ -99,7 +99,8 @@ def get_user_data_by_token():
 @app.route("/getuserbyemail", methods=["POST"])
 @auth.login_required
 def get_user_data_by_email():
-    email = request.form["email"]
+    data = json.loads(request.data)
+    email = data["email"]
     user = db_helper.get_user_by_email(email)
     if not user:
         return jsonify(success=False, message="User not found!"), bad_request
