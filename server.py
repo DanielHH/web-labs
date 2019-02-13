@@ -13,9 +13,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["SECRET_KEY"] = 'Tjelvararlitetokig utropstecken'
 
-unauthorized = 401
-bad_request = 400
-
 
 @auth.verify_token
 def verify_token(token):
@@ -35,38 +32,37 @@ def hello_world():
     return 'Hello, World!'
 
 
-@app.route("/signin", methods=["POST"])
-def sign_in():
-    user_info = json.loads(request.data)
-    user = db_helper.get_user(user_info["email"])
-    if db_helper.check_if_user_has_token(user):
-        return jsonify(success=False, message="User is already signed in"), bad_request
-    failed_response = jsonify(success=False, status_code="401",
-        message="Email or password is not matching")
-    if user is None:
-        return failed_response, unauthorized
-    elif user.check_password(user_info["password"]):
-        return jsonify(success=True, message="Successfully signed in.",
-            data=user.generate_auth_token())
-    else:
-        return failed_response, unauthorized
-
-
 @app.route("/signup", methods=["POST"])
 def sign_up():
     user_info = json.loads(request.data)
 
     if db_helper.get_user(user_info["email"]):
         response = jsonify(success=False, message="User already exists")
-        response.status_code = bad_request
         return response
     if (user_info["email"] and len(user_info["password"]) >= 8 and
     user_info["firstname"] and user_info["lastname"] and user_info["gender"] and
     user_info["city"] and user_info["country"]):
         user = db_helper.add_user(user_info)
-        return jsonify(success=True, message="Successfully created a new user.", data=user.generate_auth_token())
+        return jsonify(success=True, message="Successfully created a new user.")
     else:
-        return jsonify(success=False, message="Form data missing or incorrect type."), bad_request
+        return jsonify(success=False, message="Form data missing or incorrect type.")
+
+
+@app.route("/signin", methods=["POST"])
+def sign_in():
+    user_info = json.loads(request.data)
+    user = db_helper.get_user(user_info["email"])
+    if db_helper.check_if_user_has_token(user):
+        return jsonify(success=False, message="User is already signed in")
+    failed_response = jsonify(success=False,
+        message="Wrong email or password")
+    if user is None:
+        return failed_response
+    elif user.check_password(user_info["password"]):
+        return jsonify(success=True, message="Successfully signed in.",
+            data=user.generate_auth_token())
+    else:
+        return failed_response
 
 
 @app.route("/signout", methods=["POST"])
@@ -82,30 +78,25 @@ def change_password():
     data = json.loads(request.data)
     user = db_helper.get_user_by_token(g.token)
     if not len(data["new_password"]) >= 8:
-        return jsonify(success=False, message="new password must consist of at least 8 characters"), unauthorized
+        return jsonify(success=False, message="new password must consist of at least 8 characters")
     if user.change_password(data["password"], data["new_password"]):
         return jsonify(success=True, message="Password changed.")
     else:
-        return jsonify(success=False, message="Wrong password"), unauthorized
+        return jsonify(success=False, message="Wrong password")
 
 
-@app.route("/getuserbytoken", methods=["POST"])
+@app.route("/postmessage", methods=["POST"])
 @auth.login_required
-def get_user_data_by_token():
-    user = db_helper.get_user_by_token(g.token)
-    return jsonify(success=True, message="User data retrieved.", user=user.as_dict())
-
-
-@app.route("/getuserbyemail", methods=["POST"])
-@auth.login_required
-def get_user_data_by_email():
-    data = json.loads(request.data)
-    email = data["email"]
-    user = db_helper.get_user_by_email(email)
-    if not user:
-        return jsonify(success=False, message="User not found!"), bad_request
-    else:
-        return jsonify(success=True, message="User data retrieved.", user=user.as_dict())
+def post_message():
+    request_data = json.loads(request.data);
+    message = request_data["message"]
+    to_email = request_data["to_email"]
+    to_user = db_helper.get_user_by_email(to_email)
+    if not to_user:
+        return jsonify(success=False, message="User not found!")
+    from_user = db_helper.get_user_by_token(g.token)
+    db_helper.create_post(message, from_user, to_user)
+    return jsonify(success=True, message="Message posted")
 
 
 @app.route("/getmessagesbytoken", methods=["POST"])
@@ -121,26 +112,39 @@ def get_user_messages_by_token():
 @app.route("/getmessagesbyemail", methods=["POST"])
 @auth.login_required
 def get_user_messages_by_email():
-    email = json.loads(request.data)["email"]
+    email = (json.loads(request.data))["email"]
     user = db_helper.get_user_by_email(email)
     messages = []
+    """
+    if not user:
+        return jsonify(success=False, message="There is no such user.")
+        """
     for post in user.received:
         messages.append(post.message)
     return jsonify(success=True, message="User messages retrieved.", messages=messages)
 
 
-@app.route("/postmessage", methods=["POST"])
+@app.route("/getuserbytoken", methods=["POST"])
 @auth.login_required
-def post_message():
-    request_data = json.loads(request.data);
-    message = request_data["message"]
-    to_email = request_data("to_email")
-    to_user = db_helper.get_user_by_email(to_email)
-    if not to_user:
-        return jsonify(success=False, message="User not found!"), bad_request
-    from_user = db_helper.get_user_by_token(g.token)
-    db_helper.create_post(message, from_user, to_user)
-    return jsonify(success=True, message="Message posted")
+def get_user_data_by_token():
+    user = db_helper.get_user_by_token(g.token)
+    user=user.as_dict()
+    del user["id"];
+    return jsonify(success=True, message="User data retrieved.", user=user)
+
+
+@app.route("/getuserbyemail", methods=["POST"])
+@auth.login_required
+def get_user_data_by_email():
+    data = json.loads(request.data)
+    email = data["email"]
+    user = db_helper.get_user_by_email(email)
+    if not user:
+        return jsonify(success=False, message="User not found!")
+    else:
+        user=user.as_dict()
+        del user["id"];
+        return jsonify(success=True, message="User data retrieved.", user=user)
 
 
 if __name__ == "__main__":
