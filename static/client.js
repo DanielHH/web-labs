@@ -200,7 +200,7 @@ function getPosts(email = null) {
   } else {
     feed = document.getElementById("b_feed");
     feed.innerHTML = "";
-    sendXHR(xmlhttp, "POST", "http://localhost:5000/getmessagesbyemail")
+    sendXHR(xmlhttp, "POST", "http://localhost:5000/getmessagesbyemail", {"email": email})
   }
 }
 

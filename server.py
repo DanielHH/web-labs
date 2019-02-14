@@ -128,7 +128,7 @@ def get_user_messages_by_token():
 @app.route("/getmessagesbyemail", methods=["POST"])
 @auth.login_required
 def get_user_messages_by_email():
-    email = json.loads(request.data)["email"]
+    email = (json.loads(request.data))["email"]
     user = db_helper.get_user_by_email(email)
     messages = []
     for post in user.received:
