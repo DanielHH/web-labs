@@ -1,9 +1,9 @@
-function displayView(view){
+function displayView(view, ){
   document.body.innerHTML = document.getElementById(view).innerHTML;
 };
 
 window.onload = function(){
-  if (localStorage.getItem("user_token") != null) {
+  if (localStorage.getItem("user_token") != "" && localStorage.getItem("user_token") != null) {
     displayView("profile_view");
     document.getElementById("defaultOpen").click();
     fill_person_info();
@@ -72,8 +72,6 @@ function signUp(){
       } else {
         console.log("(signup) response: " + response.message)
         signIn(jsonObj.email, jsonObj.password);
-        fill_person_info();
-        displayView("profile_view");
       }
     }
   };
@@ -92,6 +90,10 @@ function signIn(email = "", password = ""){
           return false;
         } else {
           localStorage.setItem("user_token", response.data);
+          displayView("profile_view");
+          document.getElementById("defaultOpen").click();
+          fill_person_info();
+          getPosts();
         }
     };
   }
@@ -99,11 +101,12 @@ function signIn(email = "", password = ""){
     var form = document.getElementById("login_form");
     var jsonObj = getFormData(form);
       sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
-      {"email": jsonObj.email_login, "password": jsonObj.password}, false, false);
+      {"email": jsonObj.email_login, "password": jsonObj.password}, false);
   } else {
       sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
-      {"email": email, "password": password}, false, false);
+      {"email": email, "password": password}, false);
   }
+  return false;
 }
 
 function getFormData(form){
