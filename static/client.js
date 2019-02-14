@@ -62,7 +62,6 @@ function signUp(){
   var form = document.getElementById("signup_form");
   var jsonObj = getFormData(form);
   var email = document.getElementById("email");
-  console.log("(signUp) jsonObj: " + jsonObj.email);
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
   if (this.readyState == 4 && this.status == 200) {
@@ -70,7 +69,6 @@ function signUp(){
       if (response.success == false) {
         email.setCustomValidity(response.message); // Q Error doesn't show initially why?
       } else {
-        console.log("(signup) response: " + response.message)
         signIn(jsonObj.email, jsonObj.password);
       }
     }
