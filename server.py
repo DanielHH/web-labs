@@ -110,7 +110,9 @@ def get_user_data_by_email():
     if not user:
         return jsonify(success=False, message="User not found!"), bad_request
     else:
-        return jsonify(success=True, message="User data retrieved.", user=user.as_dict())
+        user=user.as_dict()
+        del user["id"];
+        return jsonify(success=True, message="User data retrieved.", user=user)
 
 
 @app.route("/getmessagesbytoken", methods=["POST"])
