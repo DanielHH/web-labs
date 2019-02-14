@@ -155,11 +155,13 @@ function changePassword() {
 
 function postMessage(email = null) {
   var form = document.getElementById("post_form");
+  var to_email = document.getElementById("email").innerHTML;
   if (email != null) {
     form = document.getElementById("b_post_form");
+    to_email = document.getElementById("b_email").innerHTML;
   }
   var message = getFormData(form);
-  message.to_email = getUserDataByToken().email // MAYBE WITH SQUARE BRACKETS
+  message.to_email = to_email;
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -182,9 +184,9 @@ function getPosts(email = null) {
     if (this.readyState == 4 && this.status == 200) {
         var response = JSON.parse(this.responseText)
         if (response.success) {
-          for (i = 0; i < response.data.length; i++) {
+          for (i = 0; i < response.messages.length; i++) {
             var node = document.createElement("div");
-            var textnode = document.createTextNode(response.data[i].content);
+            var textnode = document.createTextNode(response.messages[i]);
             node.appendChild(textnode);
             feed.appendChild(node);
           }
@@ -236,7 +238,6 @@ function sendXHR(req, method, url, data = null, needAuth = true, asych = true) {
   req.open(method, url, asych);
   if (needAuth) {
     var token = localStorage.getItem("user_token");
-    console.log("sendXHR token: " + token)
     req.setRequestHeader('Authorization', 'Bearer ' + token); // MAYBE REMOVE 'BEARER' CUZ SAVE IT LIKE THAT ALREADY
   }
   req.send(JSON.stringify(data));

@@ -139,7 +139,7 @@ def get_user_messages_by_email():
 def post_message():
     request_data = json.loads(request.data);
     message = request_data["message"]
-    to_email = request_data("to_email")
+    to_email = request_data["to_email"]
     to_user = db_helper.get_user_by_email(to_email)
     if not to_user:
         return jsonify(success=False, message="User not found!"), bad_request
