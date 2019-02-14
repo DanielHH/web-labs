@@ -96,7 +96,9 @@ def change_password():
 @auth.login_required
 def get_user_data_by_token():
     user = db_helper.get_user_by_token(g.token)
-    return jsonify(success=True, message="User data retrieved.", user=user.as_dict())
+    user=user.as_dict()
+    del user["id"];
+    return jsonify(success=True, message="User data retrieved.", user=user)
 
 
 @app.route("/getuserbyemail", methods=["POST"])
