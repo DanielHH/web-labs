@@ -132,7 +132,6 @@ function openPage(pageName, elmnt, color) {
 function changePassword() {
   var form = document.getElementById("change_psw_form");
   var jsonObj = getFormData(form);
-
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -149,7 +148,7 @@ function changePassword() {
         }
     };
   }
-  sendXHR(xmlhttp, "POST", "http://localhost:5000/changepassword", null)
+  sendXHR(xmlhttp, "POST", "http://localhost:5000/changepassword", jsonObj)
   return false;
 }
 
