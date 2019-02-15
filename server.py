@@ -2,6 +2,10 @@ from flask import Flask, request, Response, jsonify, json, g
 from flask_httpauth import HTTPTokenAuth
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from gevent.pywsgi import WSGIServer
+from geventwebsocket.handler import WebSocketHandler
+from werkzeug.serving import run_with_reloader
+from werkzeug.debug import DebuggedApplication
 import database_helper as db_helper
 
 app = Flask(__name__)
@@ -12,6 +16,8 @@ db = SQLAlchemy(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["SECRET_KEY"] = 'Tjelvararlitetokig utropstecken'
+
+app.debug = True
 
 
 @auth.verify_token
@@ -129,7 +135,7 @@ def get_user_messages_by_email():
 def get_user_data_by_token():
     user = db_helper.get_user_by_token(g.token)
     user=user.as_dict()
-    del user["id"];
+    del user["id"]
     return jsonify(success=True, message="User data retrieved.", user=user)
 
 
@@ -143,11 +149,19 @@ def get_user_data_by_email():
         return jsonify(success=False, message="User not found!")
     else:
         user=user.as_dict()
-        del user["id"];
+        del user["id"]
         return jsonify(success=True, message="User data retrieved.", user=user)
 
 
+def run_server():
+    if app.debug:
+        application = DebuggedApplication(app)
+    else:
+        application = app
+    server = WSGIServer(('', 5000), application,
+                               handler_class=WebSocketHandler)
+    server.serve_forever()
+
 if __name__ == "__main__":
-    app.debug = True
-    app.run()
     db_helper.db_reset()
+    run_with_reloader(run_server)
