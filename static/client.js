@@ -6,7 +6,7 @@ window.onload = function(){
   if (localStorage.getItem("user_token") != "" && localStorage.getItem("user_token") != null) {
     displayView("profile_view");
     document.getElementById("defaultOpen").click();
-    fill_person_info();
+    fillPersonInfo();
     getPosts();
   } else {
     displayView("welcome_view");
@@ -45,7 +45,7 @@ function signIn(email = "", password = ""){
           localStorage.setItem("user_token", response.data);
           displayView("profile_view");
           document.getElementById("defaultOpen").click();
-          fill_person_info();
+          fillPersonInfo();
           getPosts();
         }
     };
@@ -151,7 +151,7 @@ function getPosts(email = null) {
   }
 }
 
-function fill_person_info(email="") {
+function fillPersonInfo(email="") {
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -186,7 +186,7 @@ function fill_person_info(email="") {
 function searchUser() {
   var form = document.getElementById("user_search_form");
   var formData = getFormData(form);
-  fill_person_info(formData.userEmail);
+  fillPersonInfo(formData.userEmail);
   //  formData.reset(); Q: Asynkront problem. Tar förmodligen bort objektet som används och fuckar allt.
   return false;
 }
