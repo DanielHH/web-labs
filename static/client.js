@@ -13,51 +13,6 @@ window.onload = function(){
   }
 }
 
-function fill_person_info(email="") {
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-        var response = JSON.parse(this.responseText);
-        if (response.success) {
-          for (key in response.user) {
-            if (email=="") {
-              document.getElementById(key).innerHTML = response.user[key];
-            } else {
-              document.getElementById("b_" + key).innerHTML = response.user[key];
-            }
-          }
-        } else {
-          return response.message;
-        }
-    }
-  };
-  if (email == "") {
-      sendXHR(xmlhttp, "POST", "http://localhost:5000/getuserbytoken")
-  } else {
-      sendXHR(xmlhttp, "POST", "http://localhost:5000/getuserbyemail", {"email": email})
-  }
-}
-
-function checkLength(password) {
-    if (password.value.length < 8) {
-      password.setCustomValidity("password must be at least 8 characters long");
-    } else {
-      password.setCustomValidity("");
-  }
-}
-
-function isMatching(password, repeat_password) {
-    if (password.value != repeat_password.value) {
-      repeat_password.setCustomValidity("passwords must match");
-    } else {
-      repeat_password.setCustomValidity("");
-  }
-}
-
-function clearValidation(element){
-  element.setCustomValidity("");
-}
-
 function signUp(){
   var form = document.getElementById("signup_form");
   var jsonObj = getFormData(form);
@@ -107,27 +62,19 @@ function signIn(email = "", password = ""){
   return false;
 }
 
-function getFormData(form){
-  var fd = new FormData(form);
-  var jsonObj = {};
-  for (var [key, value] of fd.entries()) {
-    jsonObj[key] = value;
+function signOut() {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var response = JSON.parse(this.responseText)
+        if (response.success) {
+          sessionStorage.setItem("searched_user", null);
+          localStorage.setItem("user_token", "");
+          displayView("welcome_view");
+        }
+    };
   }
-  return jsonObj;
-}
-
-function openPage(pageName, elmnt, color) {
-  var i, tabcontent, tablinks;
-
-  tabcontent = document.getElementsByClassName("tabcontent");
-  tablinks = document.getElementsByClassName("tablink");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-    tablinks[i].style.backgroundColor = "";
-  }
-
-  document.getElementById(pageName).style.display = "flex";
-  elmnt.style.backgroundColor = color;
+  sendXHR(xmlhttp, "POST", "http://localhost:5000/signout");
 }
 
 function changePassword() {
@@ -204,34 +151,44 @@ function getPosts(email = null) {
   }
 }
 
-function searchUser() {
-  var form = document.getElementById("user_search_form");
-  var formData = getFormData(form);
-  var response = fill_person_info(formData.userEmail);
-  if(response != null) {
-    var inputField = document.getElementById("search_user_email_field");
-    inputField.setCustomValidity(response);
-  } else {
-    sessionStorage.setItem("searched_user", formData.userEmail);
-    getPosts(formData.userEmail);
-    form.reset();
-  }
-  return false;
-}
-
-function signOut() {
+function fill_person_info(email="") {
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-        var response = JSON.parse(this.responseText)
-        if (response.success) {
-          sessionStorage.setItem("searched_user", null);
-          localStorage.setItem("user_token", "");
-          displayView("welcome_view");
+      var response = JSON.parse(this.responseText);
+      if (response.success) {
+        for (key in response.user) {
+          if (email=="") {
+            document.getElementById(key).innerHTML = response.user[key];
+          } else {
+            document.getElementById("b_" + key).innerHTML = response.user[key];
+          }
         }
-    };
+        if (email != "") {
+          sessionStorage.setItem("searched_user", email);
+          getPosts(email);
+        }
+      } else {
+        var inputField = document.getElementById("search_user_email_field");
+        inputField.setCustomValidity(response.message); // Q: Varför måste man klicka två ggr för att felmeddelandet ska synas?
+      }
+      return response;
+    }
+  };
+
+  if (email == "") {
+      sendXHR(xmlhttp, "POST", "http://localhost:5000/getuserbytoken")
+  } else {
+      sendXHR(xmlhttp, "POST", "http://localhost:5000/getuserbyemail", {"email": email})
   }
-  sendXHR(xmlhttp, "POST", "http://localhost:5000/signout");
+}
+
+function searchUser() {
+  var form = document.getElementById("user_search_form");
+  var formData = getFormData(form);
+  fill_person_info(formData.userEmail);
+  //  formData.reset(); Q: Asynkront problem. Tar förmodligen bort objektet som används och fuckar allt.
+  return false;
 }
 
 function sendXHR(req, method, url, data = null, needAuth = true, asych = true) {
@@ -241,4 +198,47 @@ function sendXHR(req, method, url, data = null, needAuth = true, asych = true) {
     req.setRequestHeader('Authorization', 'Bearer ' + token); // MAYBE REMOVE 'BEARER' CUZ SAVE IT LIKE THAT ALREADY
   }
   req.send(JSON.stringify(data));
+}
+
+function getFormData(form){
+  var fd = new FormData(form);
+  var jsonObj = {};
+  for (var [key, value] of fd.entries()) {
+    jsonObj[key] = value;
+  }
+  return jsonObj;
+}
+
+function openPage(pageName, elmnt, color) {
+  var i, tabcontent, tablinks;
+
+  tabcontent = document.getElementsByClassName("tabcontent");
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+    tablinks[i].style.backgroundColor = "";
+  }
+
+  document.getElementById(pageName).style.display = "flex";
+  elmnt.style.backgroundColor = color;
+}
+
+function checkLength(password) {
+    if (password.value.length < 8) {
+      password.setCustomValidity("password must be at least 8 characters long");
+    } else {
+      password.setCustomValidity("");
+  }
+}
+
+function isMatching(password, repeat_password) {
+    if (password.value != repeat_password.value) {
+      repeat_password.setCustomValidity("passwords must match");
+    } else {
+      repeat_password.setCustomValidity("");
+  }
+}
+
+function clearValidation(element){
+  element.setCustomValidity("");
 }
