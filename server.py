@@ -18,7 +18,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["SECRET_KEY"] = 'Tjelvararlitetokig utropstecken'
 
 app.debug = True
-
+# SPARA WS MED USER TOKEN {token: ws}
+clients = {}
 
 @auth.verify_token
 def verify_token(token):
@@ -75,9 +76,10 @@ def sign_in():
     user_info = json.loads(request.data)
     user = db_helper.get_user(user_info["email"])
     if db_helper.check_if_user_has_token(user):
-        return jsonify(success=False, message="User is already signed in")
-    failed_response = jsonify(success=False,
-        message="Wrong email or password")
+        if db_helper.remove_token(g.token) == False:
+            return jsonify(success=False, message="sorry man we fucked up")
+
+    failed_response = jsonify(success=False, message="Wrong email or password")
     if user is None:
         return failed_response
     elif user.check_password(user_info["password"]):
