@@ -1,16 +1,29 @@
+
+var devurl = 'localhost:5000';
+
 function displayView(view, ){
   document.body.innerHTML = document.getElementById(view).innerHTML;
 };
 
 window.onload = function(){
-  if (localStorage.getItem("user_token") != "" && localStorage.getItem("user_token") != null) {
-    displayView("profile_view");
-    document.getElementById("defaultOpen").click();
-    fillPersonInfo();
-    getPosts();
-  } else {
-    displayView("welcome_view");
-  }
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+      var response = JSON.parse(this.responseText);
+      if (response.success == true) {
+        displayView("profile_view");
+        document.getElementById("defaultOpen").click();
+        fillPersonInfo();
+        getPosts();
+        openWebSocketConnection();
+      }
+    } else if (this.readyState == 4 && this.status != 200) {
+      var response = JSON.parse(this.responseText);
+      console.log(response)
+      displayView("welcome_view");
+    }
+  };
+  sendXHR(xmlhttp, "POST", "http://" + devurl + "/checklogin")
 }
 
 function signUp(){
@@ -47,6 +60,7 @@ function signIn(email = "", password = ""){
           document.getElementById("defaultOpen").click();
           fillPersonInfo();
           getPosts();
+          openWebSocketConnection();
         }
     };
   }
@@ -241,4 +255,15 @@ function isMatching(password, repeat_password) {
 
 function clearValidation(element){
   element.setCustomValidity("");
+}
+
+function openWebSocketConnection() {
+  var connection = new WebSocket('ws://' + devurl + '/ping')
+  connection.onopen = function() {
+    connection.send('sadasdasdasd')
+  }
+
+  connection.onmessage = function(e) {
+    console.log('Server: ' + e.data)
+  }
 }

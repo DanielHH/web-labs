@@ -33,6 +33,22 @@ def auth_error():
     return jsonify(success=False, message="You are not signed in.")
 
 
+@app.route('/ping')
+def ping():
+    if request.environ.get('wsgi.websocket'):
+        ws = request.environ['wsgi.websocket']
+        while True:
+            message = ws.receive()
+            ws.send(message)
+    return
+
+
+@app.route('/checklogin', methods=["POST"])
+@auth.login_required
+def check_login():
+    return jsonify(success=True, message="You are signed in!")
+
+
 @app.route('/',methods=["GET"])
 def hello_world():
     return 'Hello, World!'
