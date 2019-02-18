@@ -62,7 +62,7 @@ function signIn(email = "", password = ""){
           getPosts();
           openWebSocketConnection();
         }
-    };
+    }
   }
   if (email == "") {
     var form = document.getElementById("login_form");
@@ -258,12 +258,15 @@ function clearValidation(element){
 }
 
 function openWebSocketConnection() {
-  var connection = new WebSocket('ws://' + devurl + '/ping')
+  var connection = new WebSocket('ws://' + devurl + '/openwebsocketconnection')
   connection.onopen = function() {
-    connection.send('sadasdasdasd')
+    console.log(JSON.stringify({token:localStorage.getItem("user_token")}))
+
+    connection.send(JSON.stringify({token:localStorage.getItem("user_token")}))
   }
 
   connection.onmessage = function(e) {
+    console.log(e)
     console.log('Server: ' + e.data)
   }
 }

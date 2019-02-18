@@ -18,11 +18,12 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config["SECRET_KEY"] = 'Tjelvararlitetokig utropstecken'
 
 app.debug = True
-# SPARA WS MED USER TOKEN {token: ws}
-clients = {}
+# SPARA WS MED USER TOKEN {token object: ws}
+active_web_sockets = {}
 
 @auth.verify_token
 def verify_token(token):
+    #print token
     if db_helper.token_exists(token):
         g.token = token
         return True
@@ -34,13 +35,36 @@ def auth_error():
     return jsonify(success=False, message="You are not signed in.")
 
 
-@app.route('/ping')
-def ping():
+@app.route('/openwebsocketconnection')
+def open_web_socket_connection():
+    print "Open web socket!"
     if request.environ.get('wsgi.websocket'):
-        ws = request.environ['wsgi.websocket']
+        current_ws = request.environ['wsgi.websocket']
         while True:
-            message = ws.receive()
-            ws.send(message)
+            data = current_ws.receive()
+            print type(data)
+            print current_ws
+            load_data = json.loads(data)
+            print load_data
+
+            current_token = db_helper.token_exists(load_data["token"])
+            ws_to_close_key = None
+            if current_token:
+                print "WALID TOKEN"
+                for token, ws in active_web_sockets.iteritems():
+                    if token.user_id == current_token.user_id:
+                        print "HAH GOTEEEM"
+                        ws.send("HEJDA")
+                        #ws.close()
+                        ws_to_close_key = token
+                        break
+                if ws_to_close_key:
+                    del active_web_sockets[ws_to_close_key]
+                active_web_sockets[current_token] = current_ws
+                current_ws.send(current_token.token)
+            else:
+                print "NOT WALID TOKEN"
+                #current_ws.close()
     return
 
 
@@ -75,17 +99,17 @@ def sign_up():
 def sign_in():
     user_info = json.loads(request.data)
     user = db_helper.get_user(user_info["email"])
-    if db_helper.check_if_user_has_token(user):
-        if db_helper.remove_token(g.token) == False:
-            return jsonify(success=False, message="sorry man we fucked up")
 
     failed_response = jsonify(success=False, message="Wrong email or password")
     if user is None:
+        print "NO USER"
         return failed_response
     elif user.check_password(user_info["password"]):
+        print "password OK"
         return jsonify(success=True, message="Successfully signed in.",
             data=user.generate_auth_token())
     else:
+        print "password NOT OK"
         return failed_response
 
 
