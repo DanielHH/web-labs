@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from gevent.pywsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
+from geventwebsocket import WebSocketError
 from werkzeug.serving import run_with_reloader
 from werkzeug.debug import DebuggedApplication
 import database_helper as db_helper
@@ -40,32 +41,27 @@ def open_web_socket_connection():
     print "Open web socket!"
     if request.environ.get('wsgi.websocket'):
         current_ws = request.environ['wsgi.websocket']
-        while True:
-            data = current_ws.receive()
-            print type(data)
-            print current_ws
-            load_data = json.loads(data)
-            print load_data
+        data = current_ws.receive()
+        load_data = json.loads(data)
 
-            current_token = db_helper.token_exists(load_data["token"])
-            ws_to_close_key = None
-            if current_token:
-                print "WALID TOKEN"
-                for token, ws in active_web_sockets.iteritems():
-                    if token.user_id == current_token.user_id:
-                        print "HAH GOTEEEM"
-                        ws.send("HEJDA")
-                        #ws.close()
-                        ws_to_close_key = token
-                        break
-                if ws_to_close_key:
-                    del active_web_sockets[ws_to_close_key]
-                active_web_sockets[current_token] = current_ws
-                current_ws.send(current_token.token)
-            else:
-                print "NOT WALID TOKEN"
-                #current_ws.close()
-    return
+        current_token = db_helper.token_exists(load_data["token"])
+        if current_token:
+            for token, ws in active_web_sockets.iteritems(): # TODO: Byt ut for loop
+                if token.user_id == current_token.user_id:
+                    ws.send(json.dumps({"action":"LOG_OUT"}))
+                    break
+            active_web_sockets[current_token] = current_ws
+        else:
+            current_ws.close()
+
+        while True:
+            try:
+                msg = current_ws.receive()
+                current_ws.send(msg)
+            except WebSocketError as e:
+                print repr(e)
+                break
+    return ''
 
 
 @app.route('/checklogin', methods=["POST"])
@@ -102,21 +98,22 @@ def sign_in():
 
     failed_response = jsonify(success=False, message="Wrong email or password")
     if user is None:
-        print "NO USER"
         return failed_response
     elif user.check_password(user_info["password"]):
-        print "password OK"
         return jsonify(success=True, message="Successfully signed in.",
             data=user.generate_auth_token())
     else:
-        print "password NOT OK"
         return failed_response
 
 
 @app.route("/signout", methods=["POST"])
 @auth.login_required
 def sign_out():
-    if db_helper.remove_token(g.token):
+    token = db_helper.remove_token(g.token)
+    if token:
+        ws = active_web_sockets[token]
+        ws.close()
+        del active_web_sockets[token]
         return jsonify(success=True, message="Successfully signed out.")
 
 

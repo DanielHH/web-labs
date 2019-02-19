@@ -83,7 +83,7 @@ function signOut() {
         var response = JSON.parse(this.responseText)
         if (response.success) {
           sessionStorage.setItem("searched_user", null);
-          localStorage.setItem("user_token", "");
+          localStorage.setItem("user_token", null);
           displayView("welcome_view");
         }
     };
@@ -260,13 +260,19 @@ function clearValidation(element){
 function openWebSocketConnection() {
   var connection = new WebSocket('ws://' + devurl + '/openwebsocketconnection')
   connection.onopen = function() {
-    console.log(JSON.stringify({token:localStorage.getItem("user_token")}))
-
     connection.send(JSON.stringify({token:localStorage.getItem("user_token")}))
   }
 
   connection.onmessage = function(e) {
-    console.log(e)
     console.log('Server: ' + e.data)
+    msg = JSON.parse(e.data)
+    if (msg.action == "LOG_OUT") {
+      alert("You have been signed out")
+      signOut()
+    }
+  }
+
+  connection.onclose = function() {
+    console.log("connection closed.")
   }
 }
