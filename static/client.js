@@ -205,8 +205,8 @@ function searchUser() {
   return false;
 }
 
-function sendXHR(req, method, url, data = null, needAuth = true, asych = true) {
-  req.open(method, url, asych);
+function sendXHR(req, method, url, data = null, needAuth = true, asynch = true) {
+  req.open(method, url, asynch);
   if (needAuth) {
     var token = localStorage.getItem("user_token");
     req.setRequestHeader('Authorization', 'Bearer ' + token); // MAYBE REMOVE 'BEARER' CUZ SAVE IT LIKE THAT ALREADY
