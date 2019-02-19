@@ -36,6 +36,7 @@ function signUp(){
       var response = JSON.parse(this.responseText);
       if (response.success == false) {
         email.setCustomValidity(response.message); // Q Error doesn't show initially why?
+        email.reportValidity();
       } else {
         signIn(jsonObj.email, jsonObj.password);
       }
@@ -184,7 +185,8 @@ function fillPersonInfo(email="") {
         }
       } else {
         var inputField = document.getElementById("search_user_email_field");
-        inputField.setCustomValidity(response.message); // Q: Varför måste man klicka två ggr för att felmeddelandet ska synas?
+        inputField.setCustomValidity(response.message);
+        inputField.reportValidity();
       }
       return response;
     }
@@ -201,7 +203,6 @@ function searchUser() {
   var form = document.getElementById("user_search_form");
   var formData = getFormData(form);
   fillPersonInfo(formData.userEmail);
-  //  formData.reset(); Q: Asynkront problem. Tar förmodligen bort objektet som används och fuckar allt.
   return false;
 }
 
