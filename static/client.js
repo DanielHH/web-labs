@@ -158,11 +158,11 @@ function getPosts(email = null) {
   if (email == null) {
     // MAYBE MOVE OUT feed.innerHTML = "";. WE SHALL SEE
     feed.innerHTML = "";
-    sendXHR(xmlhttp, "POST", "http://localhost:5000/getmessagesbytoken")
+    sendXHR(xmlhttp, "GET", "http://localhost:5000/getmessagesbytoken")
   } else {
     feed = document.getElementById("b_feed");
     feed.innerHTML = "";
-    sendXHR(xmlhttp, "POST", "http://localhost:5000/getmessagesbyemail", {"email": email})
+    sendXHR(xmlhttp, "GET", "http://localhost:5000/getmessagesbyemail?email=" + email)
   }
 }
 
@@ -193,9 +193,9 @@ function fillPersonInfo(email="") {
   };
 
   if (email == "") {
-      sendXHR(xmlhttp, "POST", "http://localhost:5000/getuserbytoken")
+      sendXHR(xmlhttp, "GET", "http://localhost:5000/getuserbytoken")
   } else {
-      sendXHR(xmlhttp, "POST", "http://localhost:5000/getuserbyemail", {"email": email})
+      sendXHR(xmlhttp, "GET", "http://localhost:5000/getuserbyemail?" + "email=" + email)
   }
 }
 

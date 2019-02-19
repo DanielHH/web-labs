@@ -147,7 +147,7 @@ def post_message():
     return jsonify(success=True, message="Message posted")
 
 
-@app.route("/getmessagesbytoken", methods=["POST"])
+@app.route("/getmessagesbytoken", methods=["GET"])
 @auth.login_required
 def get_user_messages_by_token():
     user = db_helper.get_user_by_token(g.token)
@@ -157,10 +157,10 @@ def get_user_messages_by_token():
     return jsonify(success=True, message="User messages retrieved.", messages=messages)
 
 
-@app.route("/getmessagesbyemail", methods=["POST"])
+@app.route("/getmessagesbyemail", methods=["GET"])
 @auth.login_required
 def get_user_messages_by_email():
-    email = (json.loads(request.data))["email"]
+    email = request.args.get("email")
     user = db_helper.get_user_by_email(email)
     messages = []
     """
@@ -172,7 +172,7 @@ def get_user_messages_by_email():
     return jsonify(success=True, message="User messages retrieved.", messages=messages)
 
 
-@app.route("/getuserbytoken", methods=["POST"])
+@app.route("/getuserbytoken", methods=["GET"])
 @auth.login_required
 def get_user_data_by_token():
     user = db_helper.get_user_by_token(g.token)
@@ -181,11 +181,10 @@ def get_user_data_by_token():
     return jsonify(success=True, message="User data retrieved.", user=user)
 
 
-@app.route("/getuserbyemail", methods=["POST"])
+@app.route("/getuserbyemail", methods=["GET"])
 @auth.login_required
 def get_user_data_by_email():
-    data = json.loads(request.data)
-    email = data["email"]
+    email = request.args.get("email")
     user = db_helper.get_user_by_email(email)
     if not user:
         return jsonify(success=False, message="User not found!")
