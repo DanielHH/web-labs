@@ -98,6 +98,14 @@ class Token(db.Model):
         self.user_id = user_id
 
 
+    def __eq__(self, other):
+        return self.token == other.token
+
+
+    def __hash__(self):
+        return hash(str(self))
+
+
     def get_token(self):
         return self.token
 

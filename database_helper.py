@@ -17,10 +17,11 @@ def remove_token(token):
     if token:
         db.session.delete(token)
         db.session.commit()
-        return True
+    return token
+"""        return True
     else:
         return False
-
+"""
 
 def get_user_by_token(token):
     token = Token.query.filter_by(token=token).first()

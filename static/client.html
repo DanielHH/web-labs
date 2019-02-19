@@ -7,13 +7,13 @@
         <script src="serverstub.js"></script>
         <script id="profile_view" type="text/view">
           <button id="defaultOpen" class="tablink" onclick="openPage('home', this, '#81A4CD')">Home</button>
-          <button class="tablink" onclick="openPage('browse', this, '#3E7CB1')">Browse</button>
-          <button class="tablink" onclick="openPage('account', this, '#054A91')">Account</button>
+          <button id="button_browse" class="tablink" onclick="openPage('browse', this, '#3E7CB1')">Browse</button>
+          <button id="button_account" class="tablink" onclick="openPage('account', this, '#054A91')">Account</button>
 
           <div id="home" class="tabcontent">
             <div id="personal_information" class="flex-item">
-              First name: <label id="firstname"></label></br>
-              Last name: <label id="familyname"></label></br>
+              First name: <label id="first_name"></label></br>
+              Last name: <label id="last_name"></label></br>
               Email: <label id="email"></label></br>
               Gender: <label id="gender"></label></br>
               City: <label id="city"></label></br>
@@ -45,8 +45,8 @@
 
             <div id="b_home" >
               <div id="personal_information" class="flex-item">
-                First name: <label id="b_firstname"></label></br>
-                Last name: <label id="b_familyname"></label></br>
+                First name: <label id="b_first_name"></label></br>
+                Last name: <label id="b_last_name"></label></br>
                 Email: <label id="b_email"></label></br>
                 Gender: <label id="b_gender"></label></br>
                 City: <label id="b_city"></label></br>
@@ -75,8 +75,8 @@
             <form id="change_psw_form" onsubmit="return changePassword();" method="post">
               <h3>Change password</h3>
               <div>
-                <label for="old_password">Current Password</label>
-                <input type="password" name="old_password" oninput="checkLength(this);" required>
+                <label for="password">Current Password</label>
+                <input type="password" name="password" oninput="checkLength(this);" required>
               </div>
               <div>
                 <label for="new_password">New Password</label>
@@ -117,8 +117,8 @@
                 <input name="firstname" type="text" id="first_name" required>
               </div>
               <div>
-                <label for="familyname">Family name</label>
-                <input name="familyname" id="family_name" required>
+                <label for="lastname">Family name</label>
+                <input name="lastname" type="text" id="last_name" required>
               </div>
               <div>
                 <label for="gender">Gender</label>
