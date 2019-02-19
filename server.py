@@ -48,8 +48,11 @@ def open_web_socket_connection():
         if current_token:
             for token, ws in active_web_sockets.iteritems(): # TODO: Byt ut for loop
                 if token.user_id == current_token.user_id:
-                    ws.send(json.dumps({"action":"LOG_OUT"}))
-                    break
+                    try:
+                        ws.send(json.dumps({"action":"LOG_OUT"}))
+                    except WebSocketError as e:
+                        print repr(e)
+                    #break
             active_web_sockets[current_token] = current_ws
         else:
             current_ws.close()
