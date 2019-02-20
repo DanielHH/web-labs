@@ -19,7 +19,6 @@ window.onload = function(){
       }
     } else if (this.readyState == 4 && this.status != 200) {
       var response = JSON.parse(this.responseText);
-      console.log(response)
       displayView("welcome_view");
     }
   };
@@ -35,7 +34,7 @@ function signUp(){
   if (this.readyState == 4 && this.status == 200) {
       var response = JSON.parse(this.responseText);
       if (response.success == false) {
-        email.setCustomValidity(response.message); // Q Error doesn't show initially why?
+        email.setCustomValidity(response.message);
         email.reportValidity();
       } else {
         signIn(jsonObj.email, jsonObj.password);
@@ -48,6 +47,7 @@ function signUp(){
 }
 
 function signIn(email = "", password = ""){
+  var public_key = ""
   var xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -57,10 +57,11 @@ function signIn(email = "", password = ""){
           return false;
         } else {
           localStorage.setItem("user_token", response.data);
+          localStorage.setItem("email", public_key);
           displayView("profile_view");
           document.getElementById("defaultOpen").click();
           fillPersonInfo();
-          getPosts();
+          getPosts(); // TODO: Redundant for signup
           openWebSocketConnection();
         }
     }
@@ -68,9 +69,11 @@ function signIn(email = "", password = ""){
   if (email == "") {
     var form = document.getElementById("login_form");
     var jsonObj = getFormData(form);
-      sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
+    public_key = jsonObj.email_login;
+    sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
       {"email": jsonObj.email_login, "password": jsonObj.password}, false);
   } else {
+      public_key = email;
       sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
       {"email": email, "password": password}, false);
   }
@@ -135,7 +138,7 @@ function postMessage(email = null) {
     };
   }
   sendXHR(xmlhttp, "POST", "http://localhost:5000/postmessage", message)
-  return false; // MAYBE REMOVE THIS BUT THEN WE IN TROUBLE YO
+  return false;
 }
 
 function getPosts(email = null) {
@@ -206,15 +209,6 @@ function searchUser() {
   return false;
 }
 
-function sendXHR(req, method, url, data = null, needAuth = true, asynch = true) {
-  req.open(method, url, asynch);
-  if (needAuth) {
-    var token = localStorage.getItem("user_token");
-    req.setRequestHeader('Authorization', 'Bearer ' + token); // MAYBE REMOVE 'BEARER' CUZ SAVE IT LIKE THAT ALREADY
-  }
-  req.send(JSON.stringify(data));
-}
-
 function getFormData(form){
   var fd = new FormData(form);
   var jsonObj = {};
@@ -268,7 +262,6 @@ function openWebSocketConnection() {
     console.log('Server: ' + e.data)
     msg = JSON.parse(e.data)
     if (msg.action == "LOG_OUT") {
-      alert("You have been signed out")
       signOut()
     }
   }
@@ -276,4 +269,24 @@ function openWebSocketConnection() {
   connection.onclose = function() {
     console.log("connection closed.")
   }
+}
+
+function sendXHR(req, method, url, data = null, needAuth = true, asynch = true) {
+  req.open(method, url, asynch);
+  if (needAuth) {
+    hashedPayload = hashPayload(data)
+    req.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('email')); //TODO: rename 'email' -> 'public_key'
+    req.setRequestHeader('Hash', hashedPayload);
+  }
+  req.send(JSON.stringify(data));
+}
+
+function hashPayload(data) {
+  var secret = localStorage.getItem("user_token")
+  if (secret == null) {
+    secret = ""
+  }
+  var hash = CryptoJS.HmacSHA256(JSON.stringify(data), secret);
+  var hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
+  return hashInBase64
 }

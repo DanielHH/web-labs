@@ -8,6 +8,10 @@ from geventwebsocket import WebSocketError
 from werkzeug.serving import run_with_reloader
 from werkzeug.debug import DebuggedApplication
 import database_helper as db_helper
+import hmac
+import hashlib
+import binascii
+import base64
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -23,12 +27,24 @@ app.debug = True
 active_web_sockets = {}
 
 @auth.verify_token
-def verify_token(token):
-    #print token
-    if db_helper.token_exists(token):
-        g.token = token
-        return True
-    return False
+def verify_token(email):
+    if not email or email == 'null':
+        return False
+    user = db_helper.get_user_by_email(email)
+    if not user:
+        return False
+
+    hash = None
+    client_hash = request.headers.get('Hash')
+    for token in db_helper.get_user_tokens(user):
+        if not request.data:
+            hash = hmac.new(token.token, "null", hashlib.sha256).digest()
+        else:
+            hash = hmac.new(token.token, request.data, hashlib.sha256).digest()
+        hash = base64.b64encode(hash)
+        if client_hash == hash:
+            g.token = token.token
+            return True
 
 
 @auth.error_handler
@@ -38,7 +54,6 @@ def auth_error():
 
 @app.route('/openwebsocketconnection')
 def open_web_socket_connection():
-    print "Open web socket!"
     if request.environ.get('wsgi.websocket'):
         current_ws = request.environ['wsgi.websocket']
         data = current_ws.receive()
