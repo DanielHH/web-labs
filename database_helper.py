@@ -39,6 +39,9 @@ def get_user_by_email(email):
 def check_if_user_has_token(user):
     return Token.query.filter_by(user_id = user.id).first()
 
+def get_user_tokens(user):
+    return Token.query.filter_by(user_id = user.id).all()
+
 
 def create_post(message, from_user, to_user):
     post = Post(message, from_user.id, to_user.id)

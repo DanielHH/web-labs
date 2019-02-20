@@ -19,7 +19,6 @@ window.onload = function(){
       }
     } else if (this.readyState == 4 && this.status != 200) {
       var response = JSON.parse(this.responseText);
-      console.log(response)
       displayView("welcome_view");
     }
   };
@@ -62,7 +61,7 @@ function signIn(email = "", password = ""){
           displayView("profile_view");
           document.getElementById("defaultOpen").click();
           fillPersonInfo();
-          getPosts();
+          getPosts(); // TODO: Redundant for signup
           openWebSocketConnection();
         }
     }
@@ -70,11 +69,11 @@ function signIn(email = "", password = ""){
   if (email == "") {
     var form = document.getElementById("login_form");
     var jsonObj = getFormData(form);
-    public_key = jsonObj.email_login
+    public_key = jsonObj.email_login;
     sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
       {"email": jsonObj.email_login, "password": jsonObj.password}, false);
   } else {
-      public_key = email
+      public_key = email;
       sendXHR(xmlhttp, "POST", "http://localhost:5000/signin",
       {"email": email, "password": password}, false);
   }
@@ -210,16 +209,6 @@ function searchUser() {
   return false;
 }
 
-function sendXHR(req, method, url, data = null, needAuth = true, asynch = true) {
-  req.open(method, url, asynch);
-  if (needAuth) {
-    hashedPayload = hashPayload(data)
-    req.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('user_token'));
-    //req.setRequestHeader('Email', localStorage.getItem('email'));
-  }
-  req.send(JSON.stringify(data));
-}
-
 function getFormData(form){
   var fd = new FormData(form);
   var jsonObj = {};
@@ -273,7 +262,6 @@ function openWebSocketConnection() {
     console.log('Server: ' + e.data)
     msg = JSON.parse(e.data)
     if (msg.action == "LOG_OUT") {
-      alert("You have been signed out")
       signOut()
     }
   }
@@ -281,6 +269,16 @@ function openWebSocketConnection() {
   connection.onclose = function() {
     console.log("connection closed.")
   }
+}
+
+function sendXHR(req, method, url, data = null, needAuth = true, asynch = true) {
+  req.open(method, url, asynch);
+  if (needAuth) {
+    hashedPayload = hashPayload(data)
+    req.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('email')); //TODO: rename 'email' -> 'public_key'
+    req.setRequestHeader('Hash', hashedPayload);
+  }
+  req.send(JSON.stringify(data));
 }
 
 function hashPayload(data) {
